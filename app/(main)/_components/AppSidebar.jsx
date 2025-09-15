@@ -38,9 +38,9 @@ export function AppSidebar() {
                   className="p-1 font-medium"
                 >
                   <SidebarMenuButton asChild 
-                  className="p-3">
+                    className={`p-3 ${path===option.href&&"bg-blue-50"}`}>
                     <Link href={option.href}>
-
+                        {/* <option.icon className="mr-2 h-5 w-5" /> */}
                       <span className={`text-[16px] ${path===option.href&&"text-primary"}`}>{option.name}</span>
                     </Link>
                   </SidebarMenuButton>
