@@ -1,21 +1,27 @@
-// import React from 'react'
+// import React from 'react';
 // import DashboardProvider from './provider';
+// import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+// import { AppSidebar } from "./_components/AppSidebar";
 
-// function DashboardLayout({ children }) {
-//     return (
-//         <div>
-//             <DashboardProvider>
-//                 {children}
-//             </DashboardProvider>
-//         </div>
-//     )
+// export default function DashboardLayout({ children }) {
+//   return (
+//     <DashboardProvider>
+//       <SidebarProvider>
+//         <AppSidebar />
+//         <main>
+//           <SidebarTrigger />
+//           {children}
+//         </main>
+//       </SidebarProvider>
+//     </DashboardProvider>
+//   );
 // }
-// export default DashboardLayout;
+
 
 
 import React from 'react';
 import DashboardProvider from './provider';
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./_components/AppSidebar";
 
 export default function DashboardLayout({ children }) {
@@ -24,7 +30,7 @@ export default function DashboardLayout({ children }) {
       <SidebarProvider>
         <AppSidebar />
         <main>
-          {/* <SidebarTrigger /> */}
+          <SidebarTrigger />
           {children}
         </main>
       </SidebarProvider>
