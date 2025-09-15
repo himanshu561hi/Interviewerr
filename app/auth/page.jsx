@@ -7,10 +7,15 @@ import { supabase } from '../../services/supabaseClient';
 function Login() {
     const signInWithGoogle = async () => {
         const{error} = await supabase.auth.signInWithOAuth({
-            provider: 'google',
+            provider: 'google'
         });
-        if(error) console.log('Error: ', error.message); 
+        if(error)
+            {
+                 console.log('Error: ', error.message); 
+            }
     };
+
+    
     return (
     <div className="flex flex-col justify-center items-center h-screen">
         <div className="flex flex-col items-center border p-8 rounded-2xl shadow-lg">

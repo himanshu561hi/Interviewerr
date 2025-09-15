@@ -1,94 +1,58 @@
-// "use client"
-// import React, { useState } from 'react';
-// import { supabase } from '@/services/supabaseClient';
 
-// function Provider({ children }) {
-
-//     useEffect(() => {
-//         createNewUser();
-//     }, [])
-
-//     const createNewUser = () => {
-//         supabase.auth.getUser.then(async({data: {user}}) => {
-//         // check if user data exists in local storage
-//         let { data: Users, error } = await supabase
-//             .from("Users")
-//             .select("*")
-//             .eq("email", user?.email);
-//         console.log(Users); 
-        
-
-//         //if not, create a new user object
-//         if(user?.length == 0){
-//             const { data, error } = await supabase.from("Users")
-//             .insert([
-//                 {
-//                     name:user?.user_metadata?.full_name,
-//                     email:user?.email,
-//                     avatar:user?.user_metadata?.avatar_url
-//                 }
-//             ])
-//             console.log(data);
-//         }
-        
-//     };
-//     return (
-//         <div>{children}</div>
-        
-//     )
-// }
-// };
-
-"use client";
-import React, { useEffect } from 'react';
+"use client"
+import React, { useEffect, useState } from 'react';
 import { supabase } from '@/services/supabaseClient';
 
 function Provider({ children }) {
     useEffect(() => {
-        const createNewUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            
-            if (user) {
-                // Check if user data exists in the 'Users' table
-                const { data: users, error } = await supabase
-                    .from("Users")
-                    .select("*")
-                    .eq("email", user.email);
-    
-                if (error) {
-                    console.error("Error fetching user data:", error);
-                    return;
-                }
-    
-                console.log("Existing users with this email:", users); 
-    
-                // If no user found, create a new one
-                if (!users || users.length === 0) {
-                    const { data, error: insertError } = await supabase.from("Users")
-                        .insert([
-                            {
-                                name: user.user_metadata?.full_name,
-                                email: user.email,
-                                avatar: user.user_metadata?.avatar_url
-                            }
-                        ])
-                        .select(); // Use .select() to return the newly created data
-    
-                    if (insertError) {
-                        console.error("Error creating new user:", insertError);
-                    } else {
-                        console.log("New user created:", data);
-                    }
+     
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+            (event, session) => {
+                if (event === 'SIGNED_IN' && session) {
+                    console.log("User signed in:", session.user);
+                    checkAndCreateUser(session.user);
                 }
             }
-        };
+        );
 
-        createNewUser();
+      
+        return () => subscription.unsubscribe();
     }, []);
+
+    const checkAndCreateUser = async (user) => {
+    
+        const { data: Users, error: selectError } = await supabase
+            .from("Users")
+            .select("*")
+            .eq("email", user.email);
+
+        if (selectError) {
+            console.error('Error fetching user:', selectError);
+            return;
+        }
+
+        if (Users.length === 0) {
+            const { data, error: insertError } = await supabase
+                .from('Users')
+                .insert([
+                    {
+                        name: user.user_metadata.full_name,
+                        email: user.email,
+                        profile_image: user.user_metadata.avatar_url
+                    }
+                ]);
+            if (insertError) {
+                console.error('Error creating new user:', insertError);
+            } else {
+                console.log('New user created successfully.');
+            }
+        } else {
+            console.log('User already exists in database.');
+        }
+    };
 
     return (
         <div>{children}</div>
     );
 }
-
 export default Provider;
