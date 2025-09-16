@@ -1,4 +1,6 @@
 "use client"
+import { Button } from '@/components/ui/button';
+import { Video } from 'lucide-react';
 import React from 'react';
 import { useState } from 'react';
 
@@ -6,19 +8,13 @@ import { useState } from 'react';
 function LatestInterviewList() {
     const [interviewList, setInterviewList] = useState([]);
     return (
-        <div className="grid mt-5 grid-cols-3 gap-5">  
-            <div className="bg-white p-5 border rounded-xl cursor-pointer hover:shadow-lg transition">
-                <h2 className="font-bold mt-3">Interview 1</h2>
-               
-            </div>
-            <div className="bg-white p-5 border border-gray-200 rounded-xl cursor-pointer hover:shadow-lg transition">
-                <h2 className="font-bold mt-3">Interview 2</h2>
-                
-            </div>
-            <div className="bg-white p-5 border border-gray-200 rounded-xl cursor-pointer hover:shadow-lg transition">
-                <h2 className="font-bold mt-3">Interview 3</h2>
-                
-            </div>
+        <div className="my-5">  
+            {interviewList.length === 0 &&
+            <div className="p-5 flex flex-col gap-3 items-center mt-5">
+                <Video className="h-10 w-10 text-primary "/>
+                <h2>You Don't Have Any Interviews Created</h2>
+                <Button>+ Create New Interview</Button>
+                </div>}
         </div>
     );
 }
