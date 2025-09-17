@@ -16,12 +16,12 @@ export default function CreateInterview() {
             ...prev,
             [field]:value
         }))
+        console.log("FormData",formData)
     }, [setFormData]);
 
-    // जब भी formData में बदलाव होगा, यह hook चलेगा
     useEffect(()=>{
         console.log("FormData", formData);
-    }, [formData]); // formData को dependency array में जोड़ें
+    }, [formData]); 
 
     return (
         <div className="mt-5 px-10 md:px-24 lg:px-44 xl:px-56">

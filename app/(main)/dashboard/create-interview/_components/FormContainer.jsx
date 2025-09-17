@@ -23,6 +23,12 @@ function FormContainer({onHandleInputChange}) {
         onHandleInputChange('type', selectedTypes);
     }, [selectedTypes, onHandleInputChange]);
 
+    useEffect(() => {
+      if(InterviewType) {
+        onHandleInputChange('type', InterviewType)
+      }
+    },[InterviewType])
+
     return (
     <div className="p-5 bg-white rounded-2xl m-5">
       <div>
@@ -60,7 +66,7 @@ function FormContainer({onHandleInputChange}) {
             {InterviewType.map((type,index)=>(
                 <div key={index} 
                     className="flex items-center gap-2 hover:bg-secondary cursor-pointer p-1 px-2 bg-white border border-gray-300 rounded-2xl" 
-                    onClick={()=>setSelectedTypes(prev=>[...prev,type.name])} // Array में type का नाम add करें
+                    onClick={()=>setSelectedTypes(prev=>[...prev,type.title])} // Array में type का नाम add करें
                 >
                     <type.icon className="w-4 h-4"/> 
                     <span>{type.title}</span>
