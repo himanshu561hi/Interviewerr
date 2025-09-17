@@ -1,5 +1,5 @@
 "use client"
-import { calendar, List, LayoutDashboard, Settings, walletCards } from "lucide-react";
+import { Calendar, List, LayoutDashboard, Settings, WalletCards, Code2Icon, User2Icon, BriefcaseBusinessIcon, Puzzle, Sparkles } from "lucide-react";
 
 export const SideBarOptions = [
     {
@@ -10,7 +10,7 @@ export const SideBarOptions = [
     {
         name: "Scheduled Interview",
         href: "/scheduled-interview",
-        icon: calendar       
+        icon: Calendar       
     },
     {
         name: "All Interview",
@@ -20,11 +20,32 @@ export const SideBarOptions = [
     {
         name: "Billing",
         href: "/billing",
-        icon: walletCards       
+        icon: WalletCards       
     },
     {
         name: "Settings",
         href: "/settings",
         icon: Settings       
     }
-];
+]
+
+export const InterviewType = [
+    {
+        title: 'Technical',
+        icon: Code2Icon
+    },
+    {
+        title: 'Behavioral',
+        icon: User2Icon
+    },{
+        title: 'Experience',
+        icon: BriefcaseBusinessIcon
+    },{
+        title: 'Leadership',
+        icon: Sparkles
+    },
+    {
+        title: 'Problem Solving',
+        icon: Puzzle
+    },
+]
