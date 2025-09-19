@@ -50,13 +50,11 @@ export default function DashboardProvider({ children }) {
             } else {
                 console.log('New user created successfully.');
             }
-            // नए user का data state में save करें
             setUserDetails({
                 name: user.user_metadata.full_name,
                 profile_image: user.user_metadata.avatar_url,
             });
         } else {
-            // user database में है, तो उसका data state में save करें
             setUserDetails(Users[0]);
             console.log('User data loaded into context:', Users[0]);
         }
