@@ -1,7 +1,7 @@
 
 "use client"
 import { Button } from '@/components/ui/button';
-import { Loader2Icon } from 'lucide-react';
+import { Loader2, Loader2Icon } from 'lucide-react';
 import React, { useState } from 'react';
 import { supabase } from '@/services/supabaseClient';
 import { useUser } from '@/app/provider'
@@ -13,7 +13,8 @@ import QuestionListContainer from './QuestionListContainer';
 // It receives formData and onFinish as props from the parent
 function QuestionList({ questions, loading, formData, onFinish }) {
 
-  const [userDetails, setUserDetails] = useState(null);
+  const [userDetails, setUserDetails] = useState();
+  const [saveLoading, setSaveLoading] = useState(false);
 
 
   const handleFinish = async() => {
@@ -24,6 +25,7 @@ function QuestionList({ questions, loading, formData, onFinish }) {
     }
 
     try {
+        setSaveLoading(true);
         const interview_id = uuidv4();
         const { data, error } = await supabase
         .from('Interview')
@@ -31,13 +33,12 @@ function QuestionList({ questions, loading, formData, onFinish }) {
             { 
                 ...formData,
                 questionList: questions, // Use the questions prop
-                email: userDetails?.email,
-                interview_id: interview_id,
-                name: userDetails?.name
+
+                interview_id: interview_id
             },
         ])
         .select();
-
+        setSaveLoading(false);
         if (error) {
             console.error("Supabase insert error:", error);
             toast.error("Failed to save the interview.");
@@ -73,10 +74,14 @@ function QuestionList({ questions, loading, formData, onFinish }) {
         </div>
       )}
       <div className="flex justify-end mt-10">
-        <Button onClick={handleFinish}>Finish</Button>
+        <Button onClick={handleFinish} disabled={saveLoading}>
+          {saveLoading&&<Loader2 className="animate-spin"/>}
+          Finish</Button>
       </div>
     </div>
   )
 }
 
 export default QuestionList;
+
+
