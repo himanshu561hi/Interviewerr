@@ -1,4 +1,3 @@
-
 "use client";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -7,13 +6,15 @@ import { Progress } from "@/components/ui/progress";
 import FormContainer from "./_components/FormContainer";
 import QuestionList from "./_components/QuestionList";
 import { Toaster, toast } from "sonner";
+import InterviewLink from "./_components/InterviewLink";
 
-export default function CreateInterview({onFinish}) {
+export default function CreateInterview({ onFinish }) {
   const Router = useRouter();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(3);
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState([]);
+  const [interviewId, setInterviewId] = useState();
 
   const onHandleInputChange = useCallback(
     (field, value) => {
@@ -24,9 +25,15 @@ export default function CreateInterview({onFinish}) {
     },
     [setFormData]
   );
-  
+
   const onGenerateQuestionsClick = useCallback(async () => {
-    if (!formData.jobPosition || !formData.jobDescription || !formData.duration || !formData.type || formData.type.length === 0) {
+    if (
+      !formData.jobPosition ||
+      !formData.jobDescription ||
+      !formData.duration ||
+      !formData.type ||
+      formData.type.length === 0
+    ) {
       toast.error("Please fill all the details.");
       return;
     }
@@ -55,6 +62,11 @@ export default function CreateInterview({onFinish}) {
     }
   }, [formData, setStep, setQuestions, setLoading]);
 
+  const onCreateLink = (interview_id) => {
+    setInterviewId(interview_id);
+    setStep(step + 1);
+  };
+
   return (
     <div className="mt-5 px-10 md:px-24 lg:px-44 xl:px-56">
       <div className="flex items-center gap-5 ">
@@ -70,12 +82,17 @@ export default function CreateInterview({onFinish}) {
           loading={loading}
         />
       ) : step === 2 ? (
-        <QuestionList 
+        <QuestionList
           questions={questions}
           loading={loading}
-          formData={formData} 
-          onFinish={onFinish} />
+          formData={formData}
+          onFinish={onFinish}
+          onCreateLink={(interview_id) => onCreateLink(interview_id)}
+        />
+      ) : step == 3 ? (
+        <InterviewLink interview_id={interviewId} formData={formData} />
       ) : null}
+
       <Toaster position="bottom-right" />
     </div>
   );

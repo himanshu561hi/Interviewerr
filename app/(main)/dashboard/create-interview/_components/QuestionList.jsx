@@ -11,7 +11,7 @@ import QuestionListContainer from './QuestionListContainer';
 
 // This component now contains all the logic and styling for the question list
 // It receives formData and onFinish as props from the parent
-function QuestionList({ questions, loading, formData, onFinish }) {
+function QuestionList({ questions, loading, formData, onFinish, onCreateLink }) {
 
   const [userDetails, setUserDetails] = useState();
   const [saveLoading, setSaveLoading] = useState(false);
@@ -39,6 +39,10 @@ function QuestionList({ questions, loading, formData, onFinish }) {
         ])
         .select();
         setSaveLoading(false);
+
+        onCreateLink(interview_id)
+
+
         if (error) {
             console.error("Supabase insert error:", error);
             toast.error("Failed to save the interview.");
@@ -76,7 +80,7 @@ function QuestionList({ questions, loading, formData, onFinish }) {
       <div className="flex justify-end mt-10">
         <Button onClick={handleFinish} disabled={saveLoading}>
           {saveLoading&&<Loader2 className="animate-spin"/>}
-          Finish</Button>
+          Create Interview Link & Finish</Button>
       </div>
     </div>
   )
