@@ -1,15 +1,27 @@
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Copy } from 'lucide-react';
+import React, { useState } from 'react';
 
-function InterviewLink(interviewId, formData) {
+    
+function InterviewLink({ interview_Id, formData }) {
+    const [copied, setCopied] = useState(false);
+    const GetInterviewUrl = () => {
+        const interviewUrl = `${process.env.NEXT_PUBLIC_HOST_URL}/${interview_Id}`;
+        return interviewUrl;
+    };
 
-    const GetInterviewUrl = ()=> {
-        const url = process.env.NEXT_PUBLIC_HOST_URL+'/'+interviewId
-        return url;
-    }
+    const handleCopy = async () => {
+        try {
+            await navigator.clipboard.writeText(GetInterviewUrl());
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);  // Optional: show Copied! message briefly
+        } catch (err) {
+            setCopied(false);
+        }
+    };
+
     return (
         <div className="flex flex-col items-center justify-center">
             <Image src={'/check.png'} alt="check" width={200} height={200}
@@ -27,7 +39,10 @@ function InterviewLink(interviewId, formData) {
                 </div>
                 <div className="mt-3 flex flex-row-2 gap-3">
                         <Input defaultValue={GetInterviewUrl()} disabled={true}/>
-                        <Button><Copy/>Copy Link</Button>
+                                        <Button onClick={handleCopy}>
+                    <Copy />
+                    {copied ? "Copied!" : "Copy Link"}
+                </Button>
                 </div>
                     <hr className="my-5"/>
             </div>

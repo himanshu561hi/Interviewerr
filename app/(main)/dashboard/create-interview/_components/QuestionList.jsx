@@ -26,7 +26,7 @@ function QuestionList({ questions, loading, formData, onFinish, onCreateLink }) 
 
     try {
         setSaveLoading(true);
-        const interview_id = uuidv4();
+        const interview_Id = uuidv4();
         const { data, error } = await supabase
         .from('Interview')
         .insert([
@@ -34,13 +34,13 @@ function QuestionList({ questions, loading, formData, onFinish, onCreateLink }) 
                 ...formData,
                 questionList: questions, // Use the questions prop
 
-                interview_id: interview_id
+                interview_Id: interview_Id
             },
         ])
         .select();
         setSaveLoading(false);
 
-        onCreateLink(interview_id)
+        onCreateLink(interview_Id)
 
 
         if (error) {

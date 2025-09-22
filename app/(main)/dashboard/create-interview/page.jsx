@@ -14,7 +14,7 @@ export default function CreateInterview({ onFinish }) {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState([]);
-  const [interviewId, setInterviewId] = useState();
+  const [interview_Id, setInterviewId] = useState();
 
   const onHandleInputChange = useCallback(
     (field, value) => {
@@ -62,8 +62,8 @@ export default function CreateInterview({ onFinish }) {
     }
   }, [formData, setStep, setQuestions, setLoading]);
 
-  const onCreateLink = (interview_id) => {
-    setInterviewId(interview_id);
+  const onCreateLink = (interview_Id) => {
+    setInterviewId(interview_Id);
     setStep(step + 1);
   };
 
@@ -87,10 +87,10 @@ export default function CreateInterview({ onFinish }) {
           loading={loading}
           formData={formData}
           onFinish={onFinish}
-          onCreateLink={(interview_id) => onCreateLink(interview_id)}
+          onCreateLink={(interview_Id) => onCreateLink(interview_Id)}
         />
       ) : step == 3 ? (
-        <InterviewLink interview_id={interviewId} formData={formData} />
+        <InterviewLink interview_Id={interview_Id} formData={formData} />
       ) : null}
 
       <Toaster position="bottom-right" />
