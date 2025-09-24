@@ -24,7 +24,7 @@ function InterviewLink({ interview_Id, formData }) {
     try {
       await navigator.clipboard.writeText(GetInterviewUrl());
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000); // Optional: show Copied! message briefly
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       setCopied(false);
     }
