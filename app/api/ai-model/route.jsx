@@ -25,10 +25,6 @@ export async function POST(req) {
             case '60 Min':
                 numberOfQuestions = 25;
                 break;
-            default:
-                // Fallback for an unexpected duration
-                numberOfQuestions = 10;
-                break;
         }
         
         const typeList = formData.type.join(', ');

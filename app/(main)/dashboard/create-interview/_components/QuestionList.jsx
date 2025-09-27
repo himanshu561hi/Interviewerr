@@ -9,8 +9,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { toast } from "sonner";
 import QuestionListContainer from './QuestionListContainer';
 
-// This component now contains all the logic and styling for the question list
-// It receives formData and onFinish as props from the parent
 function QuestionList({ questions, loading, formData, onFinish, onCreateLink }) {
 
   const [userDetails, setUserDetails] = useState();
