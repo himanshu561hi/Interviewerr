@@ -15,23 +15,34 @@
 
 
 
+
 "use client";
 
-import { createContext, useState } from 'react';
+import { createContext, useState, useEffect } from 'react';
 
 export const InterviewDataContext = createContext({
-    interviewInfo: { userName: '', jobPosition: '', duration: '', type: '' },
+    interviewInfo: { userName: '', jobPosition: '', duration: '', type: '', interviewData: { questionList: [] } },
     setInterviewInfo: () => {},
 });
 
-// 2. Define the Provider Component
+// Define the Provider Component
 export function InterviewDataProvider({ children }) {
     const [interviewInfo, setInterviewInfo] = useState({
-        userName: '', 
-        jobPosition: '',
-        duration: '',
-        type: '',
+        userName: 'Test User',
+        jobPosition: 'Developer',
+        duration: '30 Min',
+        type: 'Technical',
+        interviewData: {
+            questionList: [
+                { question: 'What is your experience?' },
+                { question: 'Why do you want this job?' },
+            ],
+        },
     });
+
+    useEffect(() => {
+        console.log("Context interviewInfo initialized in provider:", interviewInfo);
+    }, [interviewInfo]);
 
     return (
         <InterviewDataContext.Provider value={{ interviewInfo, setInterviewInfo }}>

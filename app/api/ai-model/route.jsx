@@ -1,5 +1,3 @@
-
-
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
@@ -67,7 +65,7 @@ Example JSON Format:
 🎯 The goal is to create a structured, relevant, and time-optimized interview plan for a "${formData.jobPosition}" role.`;
 
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
+   const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
 
         const result = await model.generateContent(prompt);
         const content = result.response.text();
