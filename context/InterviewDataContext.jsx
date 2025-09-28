@@ -1,24 +1,10 @@
-// import { createContext } from "react";
-// // In '@/context/InterviewDataContext' (simplified example)
-
-// export const InterviewDataContext = createContext({
-
-//     interviewInfo: { 
-//         userName: '', 
-//         jobPosition: '',
-//         duration: '',
-//         type: '',
-//     },
-//     setInterviewInfo: () => {},
-// });
-
-
-
 
 
 "use client";
 
 import { createContext, useState, useEffect } from 'react';
+import React from 'react';
+
 
 export const InterviewDataContext = createContext({
     interviewInfo: { userName: '', jobPosition: '', duration: '', type: '', interviewData: { questionList: [] } },
@@ -33,10 +19,10 @@ export function InterviewDataProvider({ children }) {
         duration: '30 Min',
         type: 'Technical',
         interviewData: {
-            questionList: [
-                { question: 'What is your experience?' },
-                { question: 'Why do you want this job?' },
-            ],
+           questionList: [
+    { question: 'What is your experience?' },
+    { question: 'Why do you want this job?' }
+]
         },
     });
 

@@ -1,91 +1,3 @@
-// "use client";
-// import React from "react";
-// import { useContext, useState, useEffect } from "react";
-// import { InterviewDataContext } from "@/context/InterviewDataContext";
-// import { Timer, Mic, Phone } from "lucide-react";
-// import Image from "next/image";
-// import Vapi from '@vapi-ai/web';
-
-// function StartInterview() {
-//   const vapi = new Vapi('22f6b4e0-22ba-49f1-b184-fd9ff244d1e2');
-
-//   useEffect((interviewInfo) => {
-//     interviewInfo && startCall();
-//   }, []);
-
-//   vapi.start('22f6b4e0-22ba-49f1-b184-fd9ff244d1e2');
-
-
-//   vapi.on('call-start', () => console.log('Call started'));
-// vapi.on('call-end', () => console.log('Call ended'));
-// vapi.on('message', (message) => {
-//   if (message.type === 'transcript') {
-//     console.log(`${message.role}: ${message.transcript}`);
-//   }
-// });
-
-//   const startCall = () => {
-//     let questionList;
-//     interviewInfo?.interviewData?.questionList.forEach((item, index) => {
-//       questionList = item?.question + "," + questionList;
-//     });
-//     console.log(questionList);
-//   };
-
-
-//   const { interviewInfo, setInterviewInfo } = useContext(InterviewDataContext);
-
-//   const userInitial = interviewInfo?.userName
-//     ? interviewInfo.userName[0].toUpperCase()
-//     : "U";
-
-//   return (
-//     <div className="p-20 lg:px-48 xl:px-56">
-//       <h2 className="font-bold text-xl flex items-center justify-between">
-//         AI - Interview Session
-//         <span className="flex gap-2 items-center ">
-//           <Timer />
-//           00:00:00
-//         </span>
-//       </h2>
-//       <div className="grid grid-cols-1 md:grid-cols-2 gap-7 mt-5">
-//         <div className="bg-white h-[300px] rounded-lg border flex flex-col justify-center items-center">
-//           <Image
-//             src={"/ai.jpeg"}
-//             alt="AI"
-//             width={100}
-//             height={100}
-//             className="w-[60px] h-[60px]  rounded-full object-cover"
-//           />
-//           <h2 className="text-sm font-semibold mt-2">AI Interviewer</h2>
-//         </div>
-//         <div className="bg-white h-[300px] rounded-lg border flex flex-col justify-center items-center">
-//           {/* Use the safely calculated userInitial */}
-//           <h2 className="text-2xl bg-primary text-white p-3 rounded-full px-6">
-//             {userInitial}
-//           </h2>
-//           <h2 className="text-sm mt-2 font-semibold">
-//             {interviewInfo?.userName} You
-//           </h2>
-//         </div>
-//       </div>
-//       <div className="flex items-center justify-center gap-4 mt-7">
-//         <Mic className="w-12 h-12 rounded-full bg-gray-500 text-white p-3 cursor-pointer" />
-//         <Phone className="w-12 h-12 rounded-full bg-red-500 text-white p-3 cursor-pointer" />
-//       </div>
-//       <h2 className="text-center text-sm text-gray-500 mt-4">
-//         Interview in progress...
-//       </h2>
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
 
 
 "use client";
@@ -183,90 +95,90 @@ function StartInterview() {
         const s = seconds % 60;
         return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
     };
-const startCall = () => {
-    if (typeof window === "undefined" || !vapiRef.current) {
-        console.error("Vapi instance is not initialized or not on client");
-        return;
-    }
-    
-    // 1. Build dynamic prompt content
-    let questionList = "";
-    if (interviewInfo?.interviewData?.questionList && Array.isArray(interviewInfo.interviewData.questionList)) {
-        questionList = interviewInfo.interviewData.questionList
-            .filter(item => item?.question)
-            .map(item => item.question)
-            .join(", ");
-    } else {
-        console.warn("No valid interviewData.questionList found, using fallback");
-        questionList = "What is your experience?, Why do you want this job?";
-    }
 
-    const dynamicSystemPrompt = `
-        You are an AI voice assistant conducting interviews.
-        Your job is to ask candidates provided interview questions, assess their responses.
-        Begin the conversation with a friendly introduction, setting a relaxed yet professional tone. Example:
-        "Hey there! Welcome to your ${interviewInfo?.interviewData?.jobPosition || 'React Developer'} interview. Let’s get started with a few questions!"
+    const startCall = () => {
+        if (typeof window === "undefined" || !vapiRef.current) {
+            console.error("Vapi instance is not initialized or not on client");
+            return;
+        }
+        
+        // 1. Build dynamic prompt content
+        let questionList = "";
+        if (interviewInfo?.interviewData?.questionList && Array.isArray(interviewInfo?.interviewData?.questionList)) {
+            questionList = interviewInfo?.interviewData?.questionList
+                .filter(item => item?.question)
+                .map(item => item.question)
+                .join(", ");
+        } else {
+            console.warn("No valid interviewData.questionList found, using fallback");
+            questionList = "What is your experience?, Why do you want this job?";
+        }
+        console.log("Constructed questionList:", questionList);
 
-        Ask one question at a time and wait for the candidate’s response before proceeding. Keep the questions clear and concise. Below Are the questions ask one by one:
-        Questions: ${questionList}
+        const dynamicSystemPrompt = `
+            You are an AI voice assistant conducting interviews.
+            Your job is to ask candidates provided interview questions, assess their responses.
+            Begin the conversation with a friendly introduction, setting a relaxed yet professional tone. Example:
+            "Hey there! Welcome to your ${interviewInfo?.interviewData?.jobPosition} interview. Let’s get started with a few questions!"
 
-        // ... (rest of your existing guidelines)
-        Keep the conversation natural and engaging–use casual phrases like "Alright, next up…" or "Let’s tackle a tricky one!"
-        After 5–7 questions, wrap up the interview smoothly by summarizing their performance. Example:
-        "That was great! You handled some tough questions well. Keep sharpening your skills!"
+            Ask one question at a time and wait for the candidate’s response before proceeding. Keep the questions clear and concise. Below Are the questions ask one by one:
+            Questions: ${questionList}
 
-        End on a positive note:
-        "Thanks for chatting! Hope to see you crushing projects soon!"
+            Keep the conversation natural and engaging–use casual phrases like "Alright, next up…" or "Let’s tackle a tricky one!"
+            After 5–7 questions, wrap up the interview smoothly by summarizing their performance. Example:
+            "That was great! You handled some tough questions well. Keep sharpening your skills!"
 
-        Key Guidelines:
-        ✅ Be friendly, engaging, and witty
-        ✅ Keep responses short and natural, like a real conversation
-        ✅ Adapt based on the candidate’s confidence level
-        ✅ Ensure the interview remains focused on React
-    `.trim();
+            End on a positive note:
+            "Thanks for chatting! Hope to see you crushing projects soon!"
 
-    // 2. Define the inline assistant object
-    const dynamicAssistant = {
-        name: "AI Recruiter",
-        model: {
-            provider: "openai",
-            model: "gpt-4",
-            messages: [
-                {
-                    role: "system",
-                    content: dynamicSystemPrompt,
-                },
-            ],
-        },
-        voice: {
-            provider: "playht",
-            voiceId: "jennifer",
-        },
-        transcriber: {
-            provider: "deepgram",
-            model: "nova-2",
-            language: "en-US",
-        },
-        firstMessage: `Hi ${interviewInfo?.userName || "Guest"}, how are you? Ready for your interview on ${interviewInfo?.interviewData?.jobPosition || "React Developer"}?`,
+            Key Guidelines:
+            ✅ Be friendly, engaging, and witty
+            ✅ Keep responses short and natural, like a real conversation
+            ✅ Adapt based on the candidate’s confidence level
+            ✅ Ensure the interview remains focused on React
+        `.trim();
+
+        // 2. Define the inline assistant object
+        const dynamicAssistant = {
+            name: "AI Recruiter",
+            model: {
+                provider: "openai",
+                model: "gpt-4",
+                messages: [
+                    {
+                        role: "system",
+                        content: dynamicSystemPrompt,
+                    },
+                ],
+            },
+            voice: {
+                provider: "playht",
+                voiceId: "jennifer",
+            },
+            transcriber: {
+                provider: "deepgram",
+                model: "nova-2",
+                language: "en-US",
+            },
+            firstMessage: `Hi ${interviewInfo?.userName}, how are you? Ready for your interview on ${interviewInfo?.interviewData?.jobPosition}?`,
+        };
+
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(() => {
+                console.log("Microphone access granted");
+                try {
+                    vapiRef.current.start(dynamicAssistant); 
+                    console.log("Call start attempted with dynamic assistant");
+                } catch (error) {
+                    console.error("Error starting call:", error.message);
+                }
+            })
+            .catch((err) => {
+                console.error("Microphone access denied or error:", err);
+                alert("Please allow microphone access to start the interview.");
+            });
     };
 
-    navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(() => {
-            console.log("Microphone access granted");
-            try {
-                // 3. Start the call by passing the ENTIRE dynamic assistant object
-                vapiRef.current.start(dynamicAssistant); 
-                console.log("Call start attempted with dynamic assistant");
-            } catch (error) {
-                console.error("Error starting call:", error.message);
-                // ... (error handling)
-            }
-        })
-        .catch((err) => {
-            console.error("Microphone access denied or error:", err);
-            alert("Please allow microphone access to start the interview.");
-        });
-};
     const endCall = () => {
         if (vapiRef.current && isCallActive) {
             console.log("Ending call...");
@@ -284,7 +196,7 @@ const startCall = () => {
     return (
         <div className="p-20 lg:px-48 xl:px-56">
             <h2 className="font-bold text-xl flex items-center justify-between">
-                AI - Interview Session
+                AI - Interview Session ({interviewInfo?.interviewData?.jobPosition || 'Loading...'})
                 <span className="flex gap-2 items-center">
                     <Timer />
                     {formatTime(time)}
@@ -303,7 +215,7 @@ const startCall = () => {
                 </div>
                 <div className="bg-white h-[300px] rounded-lg border flex flex-col justify-center items-center">
                     <h2 className="text-2xl bg-primary text-white p-3 rounded-full px-6">{userInitial}</h2>
-                    <h2 className="text-sm mt-2 font-semibold">{interviewInfo?.userName || "Guest"} You</h2>
+                    <h2 className="text-sm mt-2 font-semibold">{interviewInfo?.userName || "Guest"}</h2>
                 </div>
             </div>
             <div className="flex items-center justify-center gap-4 mt-7">

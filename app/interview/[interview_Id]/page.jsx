@@ -35,11 +35,7 @@ function Interview() {
       .eq('interview_Id',interview_Id)
     setInterviewData(Interview[0]);
     setLoading(false);
-    // if(Interview?.length==0)
-    // {
-    //     toast('Incorrect Interview Link')
-    //     return ;
-    // }
+  
     }catch(e){
       setLoading(false);
       toast('Incorrect Interview Link')
