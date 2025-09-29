@@ -1,10 +1,10 @@
-
 "use client";
 import React, { useContext, useState, useEffect, useRef } from "react";
-import { InterviewDataContext } from "@/context/InterviewDataContext"; // Adjust path
+import { InterviewDataContext } from "@/context/InterviewDataContext";
 import { Timer, Mic, Phone } from "lucide-react";
 import Image from "next/image";
 import Vapi from "@vapi-ai/web";
+import { useRouter } from "next/navigation";
 
 function StartInterview() {
     const { interviewInfo, setInterviewInfo } = useContext(InterviewDataContext) || {
@@ -16,13 +16,18 @@ function StartInterview() {
     const [time, setTime] = useState(0);
     const [isMuted, setIsMuted] = useState(false);
     const timerIntervalRef = useRef(null);
+    const router = useRouter();
+    const [isAiSpeaking, setIsAiSpeaking] = useState(false);
+    const [isUserSpeaking, setIsUserSpeaking] = useState(false);
+    const aiSpeechTimeoutRef = useRef(null);
+    const userSpeechTimeoutRef = useRef(null);
 
     // Initialize Vapi only on client side
     useEffect(() => {
-        if (typeof window === "undefined") return; // Prevent SSR execution
+        if (typeof window === "undefined") return;
         console.log("Initializing Vapi...");
         try {
-            vapiRef.current = new Vapi("22f6b4e0-22ba-49f1-b184-fd9ff244d1e2"); // Verify this key
+            vapiRef.current = new Vapi("22f6b4e0-22ba-49f1-b184-fd9ff244d1e2");
             console.log("Vapi initialized successfully:", vapiRef.current);
         } catch (error) {
             console.error("Failed to initialize Vapi:", error.message);
@@ -43,12 +48,28 @@ function StartInterview() {
                 ...prev,
                 isInterviewActive: false,
             }));
+            setIsAiSpeaking(false); 
+            setIsUserSpeaking(false); 
+            cleanupMedia(); // Stop microphone stream
         });
 
         vapiRef.current.on("message", (message) => {
             console.log("Message event:", message);
-            if (message.type === "transcript") {
+            if (message.type === "transcript" && message.transcript) {
                 console.log(`${message.role}: ${message.transcript}`);
+                if (message.role === "assistant") {
+                    setIsAiSpeaking(true); // AI is speaking
+                    if (aiSpeechTimeoutRef.current) clearTimeout(aiSpeechTimeoutRef.current);
+                    aiSpeechTimeoutRef.current = setTimeout(() => {
+                        setIsAiSpeaking(false); // Disable AI effect after 2 seconds of silence
+                    }, 2000);
+                } else if (message.role === "user") {
+                    setIsUserSpeaking(true); // User is speaking
+                    if (userSpeechTimeoutRef.current) clearTimeout(userSpeechTimeoutRef.current);
+                    userSpeechTimeoutRef.current = setTimeout(() => {
+                        setIsUserSpeaking(false); // Disable user effect after 2 seconds of silence
+                    }, 2000);
+                }
             }
         });
 
@@ -61,7 +82,6 @@ function StartInterview() {
         });
     }, [setInterviewInfo]);
 
-    // Start call when interviewInfo is available and on client
     useEffect(() => {
         if (typeof window === "undefined" || !vapiRef.current) return; // Prevent SSR and ensure Vapi is ready
         console.log("Checking interviewInfo in useEffect:", interviewInfo);
@@ -70,7 +90,7 @@ function StartInterview() {
             startCall();
         } else if (!interviewInfo) {
             console.warn("interviewInfo is undefined, using fallback");
-            startCall(); // Attempt with fallback
+            startCall();
         }
     }, [interviewInfo, isCallActive]);
 
@@ -101,7 +121,6 @@ function StartInterview() {
             return;
         }
         
-        // 1. Build dynamic prompt content
         let questionList = "";
         if (interviewInfo?.interviewData?.questionList && Array.isArray(interviewInfo?.interviewData?.questionList)) {
             questionList = interviewInfo?.interviewData?.questionList
@@ -139,7 +158,7 @@ function StartInterview() {
 
         // 2. Define the inline assistant object
         const dynamicAssistant = {
-            name: "AI Recruiter",
+            name: "AI Interviewer",
             model: {
                 provider: "openai",
                 model: "gpt-4",
@@ -181,27 +200,82 @@ function StartInterview() {
     const endCall = () => {
         if (vapiRef.current && isCallActive) {
             console.log("Ending call...");
-            vapiRef.current.stop();
-            setIsCallActive(false); 
+            if (vapiRef.current.mute) {
+                vapiRef.current.mute(true);
+                console.log("Microphone muted");
+            }
+            vapiRef.current.stop(); 
+            setIsCallActive(false);
             stopTimer();
             setTime(0);
             setInterviewInfo((prev) => ({
                 ...prev,
                 isInterviewActive: false,
             }));
-            console.log("Call ended, timer reset, and state updated");
+            setIsAiSpeaking(false);
+            setIsUserSpeaking(false);
+
+            const checkCallEnd = setInterval(() => {
+                if (!vapiRef.current.isConnected()) {
+                    clearInterval(checkCallEnd);
+                    console.log("Call confirmed ended, redirecting to /interview/completed");
+                    router.push("/interview/completed"); // Redirect after confirmation
+                }
+            }, 500);
+
+
+            setTimeout(() => {
+                clearInterval(checkCallEnd);
+                if (isCallActive) {
+                    console.warn("Force stopping call due to timeout");
+                    cleanupMedia();
+                    router.push("/interview/completed");
+                }
+            }, 1000);
         }
     };
 
     const toggleMic = () => {
-        setIsMuted((prev) => !prev);
-        console.log("Mic toggled:", !isMuted);
+        if (vapiRef.current && vapiRef.current.mute) {
+            vapiRef.current.mute(!isMuted); 
+            setIsMuted((prev) => !prev);
+            console.log("Mic toggled:", !isMuted);
+        }
+    };
+
+    const cleanupMedia = () => {
+
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then((stream) => {
+                    stream.getTracks().forEach((track) => track.stop());
+                    console.log("Microphone stream stopped");
+                })
+                .catch((err) => console.error("Error stopping media stream:", err));
+        }
     };
 
     const userInitial = interviewInfo?.userName ? interviewInfo.userName[0].toUpperCase() : "U";
 
     return (
         <div className="p-20 lg:px-48 xl:px-56">
+            <style>
+                {`
+                    @keyframes pulse {
+                        0% { transform: scale(1); opacity: 0.6; }
+                        50% { transform: scale(1.2); opacity: 0.3; }
+                        100% { transform: scale(1); opacity: 0.6; }
+                    }
+                    .pulse-ring {
+                        position: absolute;
+                        inset: 0;
+                        border-radius: 9999px;
+                        border: 4px solid;
+                        background: rgba(255, 255, 255, 0.2);
+                        animation: pulse 1.5s ease-in-out infinite;
+                    }
+                `}
+            </style>
             <h2 className="font-semibold text-sm">({interviewInfo?.interviewData?.jobPosition || 'Loading...'})</h2>
             <h2 className="font-bold text-xl flex items-center justify-between">
                 AI - Interview Session 
@@ -211,19 +285,33 @@ function StartInterview() {
                 </span>
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-7 mt-5">
-                <div className="bg-white h-[300px] rounded-lg border flex flex-col justify-center items-center">
-                    <Image
-                        src="/ai.jpeg"
-                        alt="AI"
-                        width={100}
-                        height={100}
-                        className="w-[60px] h-[60px] rounded-full object-cover"
-                    />
-                    <h2 className="text-sm font-semibold mt-2">AI Interviewer</h2>
+                <div className="bg-white h-[300px] rounded-lg border flex flex-col justify-center items-center relative">
+                    <div className="relative">
+                        {isAiSpeaking && (
+                            <span
+                                className="pulse-ring border-green-500"
+                            />
+                        )}
+                        <Image
+                            src="/ai.jpeg"
+                            alt="AI"
+                            width={100}
+                            height={100}
+                            className="w-[60px] h-[60px] rounded-full object-cover z-10 relative"
+                        />
+                    </div>
+                    <h2 className="text-sm font-semibold mt-2 z-10 relative">AI Interviewer</h2>
                 </div>
-                <div className="bg-white h-[300px] rounded-lg border flex flex-col justify-center items-center">
-                    <h2 className="text-2xl bg-primary text-white p-3 rounded-full px-6">{userInitial}</h2>
-                    <h2 className="text-sm mt-2 font-semibold">{interviewInfo?.userName || "Guest"}</h2>
+                <div className="bg-white h-[300px] rounded-lg border flex flex-col justify-center items-center relative">
+                    <div className="relative">
+                        {isUserSpeaking && (
+                            <span
+                                className="pulse-ring border-blue-500"
+                            />
+                        )}
+                        <h2 className="text-2xl bg-primary text-white p-3 rounded-full px-6 z-10 relative">{userInitial}</h2>
+                    </div>
+                    <h2 className="text-sm mt-2 font-semibold z-10 relative">{interviewInfo?.userName || "Guest"}</h2>
                 </div>
             </div>
             <div className="flex items-center justify-center gap-4 mt-7">
