@@ -1,3 +1,4 @@
+
 "use client";
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { InterviewDataContext } from "@/context/InterviewDataContext";
@@ -27,7 +28,7 @@ function StartInterview() {
         if (typeof window === "undefined") return;
         console.log("Initializing Vapi...");
         try {
-            vapiRef.current = new Vapi("22f6b4e0-22ba-49f1-b184-fd9ff244d1e2");
+            vapiRef.current = new Vapi("d4f8f11d-65fe-4092-878a-92a9a8d1a3b5"); // Verify this key
             console.log("Vapi initialized successfully:", vapiRef.current);
         } catch (error) {
             console.error("Failed to initialize Vapi:", error.message);
@@ -48,29 +49,29 @@ function StartInterview() {
                 ...prev,
                 isInterviewActive: false,
             }));
-            setIsAiSpeaking(false); 
-            setIsUserSpeaking(false); 
+            setIsAiSpeaking(false);
+            setIsUserSpeaking(false);
             cleanupMedia(); // Stop microphone stream
         });
 
         vapiRef.current.on("message", (message) => {
-            console.log("Message event:", message);
-            if (message.type === "transcript" && message.transcript) {
-                console.log(`${message.role}: ${message.transcript}`);
+            console.log("Message received:", message); // Debug all messages
+
+                console.log(`${message.role || 'unknown'}: ${message.transcript}`); // Log role and transcript
                 if (message.role === "assistant") {
-                    setIsAiSpeaking(true); // AI is speaking
+                    setIsAiSpeaking(true);
                     if (aiSpeechTimeoutRef.current) clearTimeout(aiSpeechTimeoutRef.current);
                     aiSpeechTimeoutRef.current = setTimeout(() => {
-                        setIsAiSpeaking(false); // Disable AI effect after 2 seconds of silence
+                        setIsAiSpeaking(false);
                     }, 2000);
-                } else if (message.role === "user") {
-                    setIsUserSpeaking(true); // User is speaking
+                } else
+                    setIsUserSpeaking(true);
                     if (userSpeechTimeoutRef.current) clearTimeout(userSpeechTimeoutRef.current);
                     userSpeechTimeoutRef.current = setTimeout(() => {
-                        setIsUserSpeaking(false); // Disable user effect after 2 seconds of silence
+                        setIsUserSpeaking(false);
                     }, 2000);
-                }
-            }
+                
+            
         });
 
         vapiRef.current.on("error", (error) => {
@@ -83,7 +84,7 @@ function StartInterview() {
     }, [setInterviewInfo]);
 
     useEffect(() => {
-        if (typeof window === "undefined" || !vapiRef.current) return; // Prevent SSR and ensure Vapi is ready
+        if (typeof window === "undefined" || !vapiRef.current) return;
         console.log("Checking interviewInfo in useEffect:", interviewInfo);
         if (interviewInfo && !isCallActive) {
             console.log("Starting call with interviewInfo:", interviewInfo);
@@ -156,7 +157,6 @@ function StartInterview() {
             ✅ Ensure the interview remains focused on React
         `.trim();
 
-        // 2. Define the inline assistant object
         const dynamicAssistant = {
             name: "AI Interviewer",
             model: {
@@ -185,7 +185,7 @@ function StartInterview() {
             .then(() => {
                 console.log("Microphone access granted");
                 try {
-                    vapiRef.current.start(dynamicAssistant); 
+                    vapiRef.current.start(dynamicAssistant);
                     console.log("Call start attempted with dynamic assistant");
                 } catch (error) {
                     console.error("Error starting call:", error.message);
@@ -204,7 +204,8 @@ function StartInterview() {
                 vapiRef.current.mute(true);
                 console.log("Microphone muted");
             }
-            vapiRef.current.stop(); 
+            vapiRef.current.stop();
+            vapiRef.current = null; // Forcefully nullify Vapi instance
             setIsCallActive(false);
             stopTimer();
             setTime(0);
@@ -214,37 +215,25 @@ function StartInterview() {
             }));
             setIsAiSpeaking(false);
             setIsUserSpeaking(false);
+            cleanupMedia(); // Stop microphone stream
 
-            const checkCallEnd = setInterval(() => {
-                if (!vapiRef.current.isConnected()) {
-                    clearInterval(checkCallEnd);
-                    console.log("Call confirmed ended, redirecting to /interview/completed");
-                    router.push("/interview/completed"); // Redirect after confirmation
-                }
-            }, 500);
-
-
+            // Immediate redirect with a small delay for cleanup
             setTimeout(() => {
-                clearInterval(checkCallEnd);
-                if (isCallActive) {
-                    console.warn("Force stopping call due to timeout");
-                    cleanupMedia();
-                    router.push("/interview/completed");
-                }
-            }, 1000);
+                router.push("/interview/completed");
+                console.log("Redirected to /interview/completed");
+            }, 500); // 500ms delay to allow cleanup
         }
     };
 
     const toggleMic = () => {
         if (vapiRef.current && vapiRef.current.mute) {
-            vapiRef.current.mute(!isMuted); 
+            vapiRef.current.mute(!isMuted);
             setIsMuted((prev) => !prev);
             console.log("Mic toggled:", !isMuted);
         }
     };
 
     const cleanupMedia = () => {
-
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ audio: true })
                 .then((stream) => {
@@ -334,3 +323,6 @@ function StartInterview() {
 }
 
 export default StartInterview;
+
+
+
