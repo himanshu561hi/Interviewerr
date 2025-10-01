@@ -32,11 +32,10 @@ function QuestionList({ questions, loading, formData, onFinish, onCreateLink }) 
       }
     };
 
-    fetchUser(); // Function ko call karein
-  }, []); // Empty array ka matlab hai ki ye effect sirf ek baar component mount hone par chalega
+    fetchUser();
+  }, []);
 
   const handleFinish = async () => {
-    // Check karein ki user details load ho gayi hain ya nahi
     if (!user) {
         toast.error("User details not found. Please log in again.");
         return;
@@ -56,12 +55,10 @@ function QuestionList({ questions, loading, formData, onFinish, onCreateLink }) 
           {
             ...formData,
             questionList: questions,
-            // Ab user.email ke bajaye user.email use karein
-            // Aur user name ke liye user.user_metadata.full_name use karein (Supabase Auth ke default ke hisab se)
             email: user.email,
-            name: user.user_metadata?.full_name || user.email, // Agar full_name nahi hai toh fallback me email use karein
+            name: user.user_metadata?.full_name || user.email,
             interview_Id: interview_Id,
-// creator ka user ID bhi save kar lena achha rehta hai
+
           },
         ])
         .select();
@@ -80,7 +77,7 @@ function QuestionList({ questions, loading, formData, onFinish, onCreateLink }) 
         }
       }
     } catch (err) {
-      setSaveLoading(false); // Error aane par loading state ko false karna na bhulein
+      setSaveLoading(false); 
       console.error("An unexpected error occurred:", err);
       toast.error("An unexpected error occurred.");
     }
