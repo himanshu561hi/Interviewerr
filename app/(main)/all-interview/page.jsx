@@ -51,7 +51,7 @@ function AllInterview() {
 
     return (
         <div className="">
-            <h2 className="my-3 font-bold ml-3 text-2xl">Previously Created Interviews</h2>
+            <h2 className="my-3 font-bold ml-3 text-2xl">All Previously Created Interviews</h2>
             {/* FIX 2: Check if the list has items to decide what to render. This is clearer. */}
             {interviewList.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
