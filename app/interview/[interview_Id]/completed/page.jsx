@@ -55,7 +55,6 @@ const InterviewComplete = () => {
         maxWidth: '500px',
         height: '250px',
         backgroundColor: '#f0f0f0',
-        borderRadius: '12px',
         marginBottom: '40px',
         display: 'flex',
         alignItems: 'center',
