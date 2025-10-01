@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { InterviewDataContext } from "@/context/InterviewDataContext";
@@ -6,135 +5,220 @@ import { Timer, Mic, Phone } from "lucide-react";
 import Image from "next/image";
 import Vapi from "@vapi-ai/web";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { supabase } from "@/services/supabaseClient";
+import { useParams } from "next/navigation";
 
 function StartInterview() {
-    const { interviewInfo, setInterviewInfo } = useContext(InterviewDataContext) || {
-        interviewInfo: { userName: 'Guest', interviewData: { questionList: [{ question: 'What is your experience?' }, { question: 'Why do you want this job?' }] } },
-        setInterviewInfo: () => {},
-    };
-    const vapiRef = useRef(null);
-    const [isCallActive, setIsCallActive] = useState(false);
-    const [time, setTime] = useState(0);
-    const [isMuted, setIsMuted] = useState(false);
-    const timerIntervalRef = useRef(null);
-    const router = useRouter();
-    const [isAiSpeaking, setIsAiSpeaking] = useState(false);
-    const [isUserSpeaking, setIsUserSpeaking] = useState(false);
-    const aiSpeechTimeoutRef = useRef(null);
-    const userSpeechTimeoutRef = useRef(null);
+  const { interviewInfo, setInterviewInfo } = useContext(
+    InterviewDataContext
+  ) || {
+    interviewInfo: {
+      userName: "Guest",
+      interviewData: {
+        questionList: [
+          { question: "What is your experience?" },
+          { question: "Why do you want this job?" },
+        ],
+      },
+    },
+    setInterviewInfo: () => {},
+  };
+  const vapiRef = useRef(null);
+  const [isCallActive, setIsCallActive] = useState(false);
+  const [time, setTime] = useState(0);
+  const [isMuted, setIsMuted] = useState(false);
+  const timerIntervalRef = useRef(null);
+  const router = useRouter();
+  const [isAiSpeaking, setIsAiSpeaking] = useState(false);
+  const [isUserSpeaking, setIsUserSpeaking] = useState(false);
+  const aiSpeechTimeoutRef = useRef(null);
+  const userSpeechTimeoutRef = useRef(null);
+  const conversationRef = useRef([]);
+  const { interview_Id } = useParams();
 
-    // Initialize Vapi only on client side
-    useEffect(() => {
-        if (typeof window === "undefined") return;
-        console.log("Initializing Vapi...");
-        try {
-            vapiRef.current = new Vapi("d4f8f11d-65fe-4092-878a-92a9a8d1a3b5"); // Verify this key
-            console.log("Vapi initialized successfully:", vapiRef.current);
-        } catch (error) {
-            console.error("Failed to initialize Vapi:", error.message);
-            return;
-        }
+  // Initialize Vapi only on client side
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    console.log("Initializing Vapi...");
+    try {
+      vapiRef.current = new Vapi("d4f8f11d-65fe-4092-878a-92a9a8d1a3b5");
+      console.log("Vapi initialized successfully:", vapiRef.current);
+    } catch (error) {
+      console.error("Failed to initialize Vapi:", error.message);
+      return;
+    }
 
-        vapiRef.current.on("call-start", () => {
-            console.log("Call started event triggered");
-            setIsCallActive(true);
-            startTimer();
-        });
+    vapiRef.current.on("call-start", () => {
+      console.log("Call started event triggered");
+      setIsCallActive(true);
+      startTimer();
+      conversationRef.current = []; // Reset conversation on new call
+    });
 
-        vapiRef.current.on("call-end", () => {
-            console.log("Call ended event triggered");
-            setIsCallActive(false);
-            stopTimer();
-            setInterviewInfo((prev) => ({
-                ...prev,
-                isInterviewActive: false,
-            }));
+    vapiRef.current.on("call-end", async () => {
+      console.log("Call ended event triggered");
+      setIsCallActive(false);
+      stopTimer();
+      setInterviewInfo((prev) => ({
+        ...prev,
+        isInterviewActive: false,
+      }));
+      setIsAiSpeaking(false);
+      setIsUserSpeaking(false);
+      cleanupMedia();
+      console.log("Full conversation:", conversationRef.current);
+      await GenerateFeedback(conversationRef.current);
+    });
+
+    vapiRef.current.on("message", (message) => {
+      console.log("Message received:", message);
+      if (message.type === "transcript") {
+        const entry = { role: message.role, transcript: message.transcript };
+        conversationRef.current.push(entry);
+        console.log(`${message.role || "unknown"}: ${message.transcript}`);
+
+        if (message.role === "assistant") {
+          setIsAiSpeaking(true);
+          if (aiSpeechTimeoutRef.current)
+            clearTimeout(aiSpeechTimeoutRef.current);
+          aiSpeechTimeoutRef.current = setTimeout(() => {
             setIsAiSpeaking(false);
-            setIsUserSpeaking(false);
-            cleanupMedia(); // Stop microphone stream
-        });
-
-        vapiRef.current.on("message", (message) => {
-            console.log("Message received:", message); // Debug all messages
-
-                console.log(`${message.role || 'unknown'}: ${message.transcript}`); // Log role and transcript
-                if (message.role === "assistant") {
-                    setIsAiSpeaking(true);
-                    if (aiSpeechTimeoutRef.current) clearTimeout(aiSpeechTimeoutRef.current);
-                    aiSpeechTimeoutRef.current = setTimeout(() => {
-                        setIsAiSpeaking(false);
-                    }, 2000);
-                } else
-                    setIsUserSpeaking(true);
-                    if (userSpeechTimeoutRef.current) clearTimeout(userSpeechTimeoutRef.current);
-                    userSpeechTimeoutRef.current = setTimeout(() => {
-                        setIsUserSpeaking(false);
-                    }, 2000);
-                
-            
-        });
-
-        vapiRef.current.on("error", (error) => {
-            console.error("Vapi error event:", JSON.stringify(error, null, 2));
-            if (error.code === "start-method-error") {
-                console.error("Start method failed. Possible causes: invalid assistant ID, API key, or serverMessage configuration.");
-                if (error.message) console.error("Error message:", error.message);
-            }
-        });
-    }, [setInterviewInfo]);
-
-    useEffect(() => {
-        if (typeof window === "undefined" || !vapiRef.current) return;
-        console.log("Checking interviewInfo in useEffect:", interviewInfo);
-        if (interviewInfo && !isCallActive) {
-            console.log("Starting call with interviewInfo:", interviewInfo);
-            startCall();
-        } else if (!interviewInfo) {
-            console.warn("interviewInfo is undefined, using fallback");
-            startCall();
-        }
-    }, [interviewInfo, isCallActive]);
-
-    const startTimer = () => {
-        if (timerIntervalRef.current) return;
-        timerIntervalRef.current = setInterval(() => {
-            setTime((prev) => prev + 1);
-        }, 1000);
-    };
-
-    const stopTimer = () => {
-        if (timerIntervalRef.current) {
-            clearInterval(timerIntervalRef.current);
-            timerIntervalRef.current = null;
-        }
-    };
-
-    const formatTime = (seconds) => {
-        const h = Math.floor(seconds / 3600);
-        const m = Math.floor((seconds % 3600) / 60);
-        const s = seconds % 60;
-        return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
-    };
-
-    const startCall = () => {
-        if (typeof window === "undefined" || !vapiRef.current) {
-            console.error("Vapi instance is not initialized or not on client");
-            return;
-        }
-        
-        let questionList = "";
-        if (interviewInfo?.interviewData?.questionList && Array.isArray(interviewInfo?.interviewData?.questionList)) {
-            questionList = interviewInfo?.interviewData?.questionList
-                .filter(item => item?.question)
-                .map(item => item.question)
-                .join(", ");
+          }, 2000);
         } else {
-            console.warn("No valid interviewData.questionList found, using fallback");
-            questionList = "What is your experience?, Why do you want this job?";
+          setIsUserSpeaking(true);
+          if (userSpeechTimeoutRef.current)
+            clearTimeout(userSpeechTimeoutRef.current);
+          userSpeechTimeoutRef.current = setTimeout(() => {
+            setIsUserSpeaking(false);
+          }, 2000);
         }
-        console.log("Constructed questionList:", questionList);
+      }
+    });
 
-        const dynamicSystemPrompt = `
+    vapiRef.current.on("error", (error) => {
+      console.error("Vapi error event:", JSON.stringify(error, null, 2));
+      if (error.code === "start-method-error") {
+        console.error(
+          "Start method failed. Possible causes: invalid assistant ID, API key, or serverMessage configuration."
+        );
+        if (error.message) console.error("Error message:", error.message);
+      }
+    });
+  }, [setInterviewInfo]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !vapiRef.current) return;
+    console.log("Checking interviewInfo in useEffect:", interviewInfo);
+    if (interviewInfo && !isCallActive) {
+      console.log("Starting call with interviewInfo:", interviewInfo);
+      startCall();
+    } else if (!interviewInfo) {
+      console.warn("interviewInfo is undefined, using fallback");
+      startCall();
+    }
+  }, [interviewInfo, isCallActive]);
+
+  const startTimer = () => {
+    if (timerIntervalRef.current) return;
+    timerIntervalRef.current = setInterval(() => {
+      setTime((prev) => prev + 1);
+    }, 1000);
+  };
+
+  const stopTimer = () => {
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+      timerIntervalRef.current = null;
+    }
+  };
+
+  const formatTime = (seconds) => {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    return `${h.toString().padStart(2, "0")}:${m
+      .toString()
+      .padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+  };
+
+  const GenerateFeedback = async (conversation) => {
+    if (!conversation || conversation.length === 0) {
+      console.log("No conversation data available for feedback.");
+      router.replace("/interview/completed");
+      return;
+    }
+    let FINAL_CONTENT = "";
+    try {
+      const result = await axios.post("/api/ai-feedback", { conversation });
+      console.log("Feedback generated:", result?.data);
+      const content = result?.data?.content;
+      FINAL_CONTENT = content
+        .replace(/^```json/, "")
+        .replace(/```$/, "")
+        .trim();
+      console.log("Cleaned Feedback Content:", FINAL_CONTENT);
+      // Optionally store in context or localStorage
+      setInterviewInfo((prev) => ({
+        ...prev,
+        feedback: FINAL_CONTENT,
+      }));
+
+      // Parse only if it looks like valid JSON
+      let feedbackData = FINAL_CONTENT;
+      try {
+        feedbackData = JSON.parse(FINAL_CONTENT);
+      } catch (parseError) {
+        console.warn("Feedback is not valid JSON, inserting as string:", parseError);
+        feedbackData = FINAL_CONTENT;
+      }
+
+      const { data, error } = await supabase
+        .from("interview-feedback")
+        .insert([
+          {
+            userName: interviewInfo?.userName,
+            userEmail: interviewInfo?.userEmail,
+            interview_Id: interview_Id,
+            feedback: feedbackData,
+            recommended: false,
+          },
+        ])
+        .select();
+      console.log("Inserted data:", data);
+      if (error) {
+        console.error("Supabase insert error:", error);
+      }
+    } catch (error) {
+      console.error("Error generating feedback:", error);
+      FINAL_CONTENT = ""; // Ensure it's defined even on error
+    } finally {
+      router.replace("/interview/" + interview_Id + "/completed");
+    }
+  };
+
+  const startCall = () => {
+    if (typeof window === "undefined" || !vapiRef.current) {
+      console.error("Vapi instance is not initialized or not on client");
+      return;
+    }
+
+    let questionList = "";
+    if (
+      interviewInfo?.interviewData?.questionList &&
+      Array.isArray(interviewInfo?.interviewData?.questionList)
+    ) {
+      questionList = interviewInfo?.interviewData?.questionList
+        .filter((item) => item?.question)
+        .map((item) => item.question)
+        .join(", ");
+    } else {
+      console.warn("No valid interviewData.questionList found, using fallback");
+      questionList = "What is your experience?, Why do you want this job?";
+    }
+    console.log("Constructed questionList:", questionList);
+
+    const dynamicSystemPrompt = `
             You are an AI voice assistant conducting interviews.
             Your job is to ask candidates provided interview questions, assess their responses.
             Begin the conversation with a friendly introduction, setting a relaxed yet professional tone. Example:
@@ -157,99 +241,103 @@ function StartInterview() {
             ✅ Ensure the interview remains focused on React
         `.trim();
 
-        const dynamicAssistant = {
-            name: "AI Interviewer",
-            model: {
-                provider: "openai",
-                model: "gpt-4",
-                messages: [
-                    {
-                        role: "system",
-                        content: dynamicSystemPrompt,
-                    },
-                ],
-            },
-            voice: {
-                provider: "playht",
-                voiceId: "jennifer",
-            },
-            transcriber: {
-                provider: "deepgram",
-                model: "nova-2",
-                language: "en-US",
-            },
-            firstMessage: `Hi ${interviewInfo?.userName}, how are you? Ready for your interview on ${interviewInfo?.interviewData?.jobPosition}?`,
-        };
-
-        navigator.mediaDevices.getUserMedia({ audio: true })
-            .then(() => {
-                console.log("Microphone access granted");
-                try {
-                    vapiRef.current.start(dynamicAssistant);
-                    console.log("Call start attempted with dynamic assistant");
-                } catch (error) {
-                    console.error("Error starting call:", error.message);
-                }
-            })
-            .catch((err) => {
-                console.error("Microphone access denied or error:", err);
-                alert("Please allow microphone access to start the interview.");
-            });
+    const dynamicAssistant = {
+      name: "AI Interviewer",
+      model: {
+        provider: "openai",
+        model: "gpt-4",
+        messages: [
+          {
+            role: "system",
+            content: dynamicSystemPrompt,
+          },
+        ],
+      },
+      voice: {
+        provider: "playht",
+        voiceId: "jennifer",
+      },
+      transcriber: {
+        provider: "deepgram",
+        model: "nova-2",
+        language: "en-US",
+      },
+      firstMessage: `Hi ${interviewInfo?.userName}, how are you? Ready for your interview on ${interviewInfo?.interviewData?.jobPosition}?`,
     };
 
-    const endCall = () => {
-        if (vapiRef.current && isCallActive) {
-            console.log("Ending call...");
-            if (vapiRef.current.mute) {
-                vapiRef.current.mute(true);
-                console.log("Microphone muted");
-            }
-            vapiRef.current.stop();
-            vapiRef.current = null; // Forcefully nullify Vapi instance
-            setIsCallActive(false);
-            stopTimer();
-            setTime(0);
-            setInterviewInfo((prev) => ({
-                ...prev,
-                isInterviewActive: false,
-            }));
-            setIsAiSpeaking(false);
-            setIsUserSpeaking(false);
-            cleanupMedia(); // Stop microphone stream
-
-            // Immediate redirect with a small delay for cleanup
-            setTimeout(() => {
-                router.push("/interview/completed");
-                console.log("Redirected to /interview/completed");
-            }, 500); // 500ms delay to allow cleanup
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then(() => {
+        console.log("Microphone access granted");
+        try {
+          vapiRef.current.start(dynamicAssistant);
+          console.log("Call start attempted with dynamic assistant");
+        } catch (error) {
+          console.error("Error starting call:", error.message);
         }
-    };
+      })
+      .catch((err) => {
+        console.error("Microphone access denied or error:", err);
+        alert("Please allow microphone access to start the interview.");
+      });
+  };
 
-    const toggleMic = () => {
-        if (vapiRef.current && vapiRef.current.mute) {
-            vapiRef.current.mute(!isMuted);
-            setIsMuted((prev) => !prev);
-            console.log("Mic toggled:", !isMuted);
-        }
-    };
+  const endCall = () => {
+    if (vapiRef.current && isCallActive) {
+      console.log("Ending call...");
+      if (vapiRef.current.mute) {
+        vapiRef.current.mute(true);
+        console.log("Microphone muted");
+      }
+      vapiRef.current.stop();
+      vapiRef.current = null; // Forcefully nullify Vapi instance
+      setIsCallActive(false);
+      stopTimer();
+      setTime(0);
+      setInterviewInfo((prev) => ({
+        ...prev,
+        isInterviewActive: false,
+      }));
+      setIsAiSpeaking(false);
+      setIsUserSpeaking(false);
+      cleanupMedia(); // Stop microphone stream
 
-    const cleanupMedia = () => {
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ audio: true })
-                .then((stream) => {
-                    stream.getTracks().forEach((track) => track.stop());
-                    console.log("Microphone stream stopped");
-                })
-                .catch((err) => console.error("Error stopping media stream:", err));
-        }
-    };
+      // Immediate redirect with a small delay for cleanup
+      setTimeout(() => {
+        router.push("/interview/" + interviewInfo?.interviewId + "/completed");
+        console.log("Redirected to /interview/completed");
+      }, 500); // 500ms delay to allow cleanup
+    }
+  };
 
-    const userInitial = interviewInfo?.userName ? interviewInfo.userName[0].toUpperCase() : "U";
+  const toggleMic = () => {
+    if (vapiRef.current && vapiRef.current.mute) {
+      vapiRef.current.mute(!isMuted);
+      setIsMuted((prev) => !prev);
+      console.log("Mic toggled:", !isMuted);
+    }
+  };
 
-    return (
-        <div className="p-20 lg:px-48 xl:px-56">
-            <style>
-                {`
+  const cleanupMedia = () => {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices
+        .getUserMedia({ audio: true })
+        .then((stream) => {
+          stream.getTracks().forEach((track) => track.stop());
+          console.log("Microphone stream stopped");
+        })
+        .catch((err) => console.error("Error stopping media stream:", err));
+    }
+  };
+
+  const userInitial = interviewInfo?.userName
+    ? interviewInfo.userName[0].toUpperCase()
+    : "U";
+
+  return (
+    <div className="p-20 lg:px-48 xl:px-56">
+      <style>
+        {`
                     @keyframes pulse {
                         0% { transform: scale(1); opacity: 0.6; }
                         50% { transform: scale(1.2); opacity: 0.3; }
@@ -264,65 +352,62 @@ function StartInterview() {
                         animation: pulse 1.5s ease-in-out infinite;
                     }
                 `}
-            </style>
-            <h2 className="font-semibold text-sm">({interviewInfo?.interviewData?.jobPosition || 'Loading...'})</h2>
-            <h2 className="font-bold text-xl flex items-center justify-between">
-                AI - Interview Session 
-                <span className="flex gap-2 items-center">
-                    <Timer />
-                    {formatTime(time)}
-                </span>
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-7 mt-5">
-                <div className="bg-white h-[300px] rounded-lg border flex flex-col justify-center items-center relative">
-                    <div className="relative">
-                        {isAiSpeaking && (
-                            <span
-                                className="pulse-ring border-green-500"
-                            />
-                        )}
-                        <Image
-                            src="/ai.jpeg"
-                            alt="AI"
-                            width={100}
-                            height={100}
-                            className="w-[60px] h-[60px] rounded-full object-cover z-10 relative"
-                        />
-                    </div>
-                    <h2 className="text-sm font-semibold mt-2 z-10 relative">AI Interviewer</h2>
-                </div>
-                <div className="bg-white h-[300px] rounded-lg border flex flex-col justify-center items-center relative">
-                    <div className="relative">
-                        {isUserSpeaking && (
-                            <span
-                                className="pulse-ring border-blue-500"
-                            />
-                        )}
-                        <h2 className="text-2xl bg-primary text-white p-3 rounded-full px-6 z-10 relative">{userInitial}</h2>
-                    </div>
-                    <h2 className="text-sm mt-2 font-semibold z-10 relative">{interviewInfo?.userName || "Guest"}</h2>
-                </div>
-            </div>
-            <div className="flex items-center justify-center gap-4 mt-7">
-                <Mic
-                    className={`w-12 h-12 rounded-full text-white p-3 cursor-pointer transition-colors ${
-                        isMuted ? "bg-gray-500" : "bg-green-500"
-                    }`}
-                    onClick={toggleMic}
-                />
-                <Phone
-                    className="w-12 h-12 rounded-full bg-red-500 text-white p-3 cursor-pointer"
-                    onClick={endCall}
-                />
-            </div>
-            <h2 className="text-center text-sm text-gray-500 mt-4">
-                {isCallActive ? "Interview in progress..." : "Starting interview..."}
-            </h2>
+      </style>
+      <h2 className="font-semibold text-sm">
+        ({interviewInfo?.interviewData?.jobPosition || "Loading..."})
+      </h2>
+      <h2 className="font-bold text-xl flex items-center justify-between">
+        AI - Interview Session
+        <span className="flex gap-2 items-center">
+          <Timer />
+          {formatTime(time)}
+        </span>
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-7 mt-5">
+        <div className="bg-white h-[300px] rounded-lg border flex flex-col justify-center items-center relative">
+          <div className="relative">
+            {isAiSpeaking && <span className="pulse-ring border-green-500" />}
+            <Image
+              src="/ai.jpeg"
+              alt="AI"
+              width={100}
+              height={100}
+              className="w-[60px] h-[60px] rounded-full object-cover z-10 relative"
+            />
+          </div>
+          <h2 className="text-sm font-semibold mt-2 z-10 relative">
+            AI Interviewer
+          </h2>
         </div>
-    );
+        <div className="bg-white h-[300px] rounded-lg border flex flex-col justify-center items-center relative">
+          <div className="relative">
+            {isUserSpeaking && <span className="pulse-ring border-blue-500" />}
+            <h2 className="text-2xl bg-primary text-white p-3 rounded-full px-6 z-10 relative">
+              {userInitial}
+            </h2>
+          </div>
+          <h2 className="text-sm mt-2 font-semibold z-10 relative">
+            {interviewInfo?.userName || "Guest"}
+          </h2>
+        </div>
+      </div>
+      <div className="flex items-center justify-center gap-4 mt-7">
+        <Mic
+          className={`w-12 h-12 rounded-full text-white p-3 cursor-pointer transition-colors ${
+            isMuted ? "bg-gray-500" : "bg-green-500"
+          }`}
+          onClick={toggleMic}
+        />
+        <Phone
+          className="w-12 h-12 rounded-full bg-red-500 text-white p-3 cursor-pointer"
+          onClick={endCall}
+        />
+      </div>
+      <h2 className="text-center text-sm text-gray-500 mt-4">
+        {isCallActive ? "Interview in progress..." : "Starting interview..."}
+      </h2>
+    </div>
+  );
 }
 
 export default StartInterview;
-
-
-
