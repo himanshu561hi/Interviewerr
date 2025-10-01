@@ -8,9 +8,11 @@ import { useUser } from '@/hooks/useUser'; // Adjust path if needed
 import { supabase } from '@/services/supabaseClient';
 import InterviewCard from './interviewCard';
 
-function LatestInterviewList() {
+function LatestInterviewList({interview}) {
     const [interviewList, setInterviewList] = useState([]);
     const { user, isLoading } = useUser();
+
+    
 
     useEffect(() => {
         console.log('useEffect triggered, user:', user);
@@ -25,7 +27,9 @@ function LatestInterviewList() {
         const { data: Interview, error } = await supabase
             .from('Interview')
             .select('*')
-            .eq('email', user?.email);
+            .eq('email', user?.email)
+            .order('id',{ascending: false})
+            .limit('6');
 
         if (error) {
             console.error('Error fetching interviews:', error);
@@ -44,26 +48,22 @@ function LatestInterviewList() {
 
     return (
         <div className="my-5">  
-            {interviewList.length === 0 ? (
+            {interviewList.length === 0 &&
                 <div className="p-5 flex flex-col gap-3 bg-white rounded-2xl border border-gray-200 items-center mt-5">
                     <Video className="h-10 w-10 text-primary" />
                     <h2>You Don't Have Any Interviews Created</h2>
                     <Button asChild>
                         <Link href="/dashboard/create-interview">+ Create New Interview</Link>
                     </Button>
-                </div>
-            ) : (
-                <div className="p-5 bg-white rounded-2xl border border-gray-200">
-                    <h2>Latest Interviews</h2>
-                    <ul className="mt-4 space-y-2">
+                </div>}
+             
+                {interviewList&&
+                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                         {interviewList.map((interview, index) => (
-                            <li key={interview.id || index} className="p-2 border-b last:border-b-0">
-                                <InterviewCard />
-                            </li>
+                            <InterviewCard interview={interview} key={index}/>
                         ))}
-                    </ul>
-                </div>
-            )}
+                </div>}
+            
         </div>
     );
 }
