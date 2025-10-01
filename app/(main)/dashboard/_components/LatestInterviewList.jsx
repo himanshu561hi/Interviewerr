@@ -6,6 +6,7 @@ import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import { useUser } from '@/hooks/useUser'; // Adjust path if needed
 import { supabase } from '@/services/supabaseClient';
+import InterviewCard from './interviewCard';
 
 function LatestInterviewList() {
     const [interviewList, setInterviewList] = useState([]);
@@ -57,7 +58,7 @@ function LatestInterviewList() {
                     <ul className="mt-4 space-y-2">
                         {interviewList.map((interview, index) => (
                             <li key={interview.id || index} className="p-2 border-b last:border-b-0">
-                                {interview.title || `Interview ${index + 1}`}
+                                <InterviewCard />
                             </li>
                         ))}
                     </ul>
