@@ -1,22 +1,77 @@
+
 "use client"
 import React, { useEffect, useState, createContext, useContext } from 'react';
 import { supabase } from '@/services/supabaseClient';
 
-export const UserDetailContext = createContext(null);
+export const DashboardContext = createContext(null);
 
-function Provider({ children }) {
+export default function DashboardProvider({ children }) {
     const [userDetails, setUserDetails] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const checkAndCreateUser = async (user) => {
+        const { data: existingUser, error: selectError } = await supabase
+            .from("Users")
+            .select("*")
+            .eq("email", user.email)
+            .single(); // Use .single() for a cleaner check
+
+        if (selectError && selectError.code !== 'PGRST116') { // Ignore 'no rows found' error
+            console.error('Error fetching user:', selectError);
+            setLoading(false);
+            return;
+        }
+
+        if (!existingUser) {
+            // User does not exist, create them
+            const { data: newUser, error: insertError } = await supabase
+                .from('Users')
+                .insert([
+                    {
+                        name: user.user_metadata.full_name,
+                        email: user.email,
+                        profile_image: user.user_metadata.avatar_url,
+                        id: user.id // Also save the auth user ID
+                    }
+                ])
+                .select()
+                .single();
+
+            if (insertError) {
+                console.error('Error creating new user:', insertError);
+            } else {
+                setUserDetails(newUser);
+                console.log('New user created and loaded into context.');
+            }
+        } else {
+            // User exists, load their data
+            setUserDetails(existingUser);
+            console.log('Existing user data loaded into context:', existingUser);
+        }
+        setLoading(false);
+    };
+
     useEffect(() => {
+        // 1. Function to check for an existing session on page load
+        const getInitialSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                await checkAndCreateUser(session.user);
+            } else {
+                setLoading(false);
+            }
+        };
+
+        // 2. Call the function on initial load
+        getInitialSession();
+
+        // 3. Listen for future auth state changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
-            (event, session) => {
+            async (event, session) => {
                 if (event === 'SIGNED_IN' && session) {
-                    // console.log("User signed in:", session.user);
-                    checkAndCreateUser(session.user);
+                    await checkAndCreateUser(session.user);
                 } else if (event === 'SIGNED_OUT') {
                     setUserDetails(null);
-                    setLoading(false);
                 }
             }
         );
@@ -24,53 +79,9 @@ function Provider({ children }) {
         return () => subscription.unsubscribe();
     }, []);
 
-    const checkAndCreateUser = async (user) => {
-        const { data: Users, error: selectError } = await supabase
-            .from("Users")
-            .select("*")
-            .eq("email", user.email);
-
-        if (selectError) {
-            console.error('Error fetching user:', selectError);
-            setLoading(false);
-            return;
-        }
-
-        if (Users.length === 0) {
-            // अगर user database में नहीं है, तो उसे insert करें
-            const { data, error: insertError } = await supabase
-                .from('Users')
-                .insert([
-                    {
-                        name: user.user_metadata.full_name,
-                        email: user.email,
-                        profile_image: user.user_metadata.avatar_url
-                    }
-                ]);
-            if (insertError) {
-                console.error('Error creating new user:', insertError);
-            } else {
-                console.log('New user created successfully.');
-            }
-        } else {
-            console.log('User already exists in database.');
-        }
-
-        setUserDetails(user); 
-        setLoading(false);
-    };
-
     return (
-        <UserDetailContext.Provider value={{ userDetails, loading }}>
-            <div>{children}</div>
-        </UserDetailContext.Provider>
+        <DashboardContext.Provider value={{ userDetails, loading }}>
+            {children}
+        </DashboardContext.Provider>
     );
 }
-
-export default Provider;
-
-
-export const useUser = () => {
-    const context = useContext(UserDetailContext);
-    return context;
-};
