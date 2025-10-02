@@ -5,6 +5,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./_components/AppSidebar";
 import WelcomeContainer from './dashboard/_components/WelcomeContainer';
 
+
 export default function DashboardLayout({ children }) {
   return (
     <DashboardProvider>
@@ -13,7 +14,7 @@ export default function DashboardLayout({ children }) {
         <main className="bg-gray-100 w-full">
           <WelcomeContainer />
           <div className="p-10 w-full">
-            {children}
+           {children}
           </div>
         </main>
       </SidebarProvider>
