@@ -43,7 +43,7 @@ const InterviewCard = ({ interview, viewdetail = false }) => {
             </div>
             <div className="flex flex-col gap-3 w-full mt-5">
                 {viewdetail ? (
-                     <Link href={`/dashboard/interview/${interview?.interview_Id}/feedback`} className="w-full">
+                     <Link href={`/scheduled-interview/${interview?.interview_Id}/Details`} className="w-full">
                         <Button className="w-full" variant={'outline'}>View Details<ArrowRight/></Button>
                      </Link>
                 ) : (
