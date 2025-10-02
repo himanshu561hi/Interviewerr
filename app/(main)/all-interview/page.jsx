@@ -43,7 +43,7 @@ function AllInterview() {
     }
 
     return (
-        <div className="p-10">
+        <div className="">
             <h2 className="font-bold text-2xl mb-8">All Previously Created Interviews</h2>
             {interviewList.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
