@@ -42,7 +42,7 @@ function StartInterview() {
     if (typeof window === "undefined") return;
     console.log("Initializing Vapi...");
     try {
-      vapiRef.current = new Vapi("d4f8f11d-65fe-4092-878a-92a9a8d1a3b5");
+      vapiRef.current = new Vapi(process.env.NEXT_PUBLIC_VAPI_PUBLIC_API_KEY)
       console.log("Vapi initialized successfully:", vapiRef.current);
     } catch (error) {
       console.error("Failed to initialize Vapi:", error.message);
@@ -53,7 +53,7 @@ function StartInterview() {
       console.log("Call started event triggered");
       setIsCallActive(true);
       startTimer();
-      conversationRef.current = []; // Reset conversation on new call
+      conversationRef.current = []; 
     });
 
     vapiRef.current.on("call-end", async () => {
@@ -158,13 +158,11 @@ function StartInterview() {
         .replace(/```$/, "")
         .trim();
       console.log("Cleaned Feedback Content:", FINAL_CONTENT);
-      // Optionally store in context or localStorage
       setInterviewInfo((prev) => ({
         ...prev,
         feedback: FINAL_CONTENT,
       }));
 
-      // Parse only if it looks like valid JSON
       let feedbackData = FINAL_CONTENT;
       try {
         feedbackData = JSON.parse(FINAL_CONTENT);

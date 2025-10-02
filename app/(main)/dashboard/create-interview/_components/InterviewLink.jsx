@@ -65,7 +65,7 @@ function InterviewLink({ interview_Id, formData }) {
           </h2>
           <h2 className="text-sm text-gray-500 flex gap-2 items-center">
             <List className="h-4 w-4" />
-            10 Questions
+            ? Questions
           </h2>
           {/* <h2 className="text-sm text-gray-500 flex gap-2 items-center"><Calendar className="h-4 w-4"/> 30 Min {formData?.duration}</h2> */}
         </div>

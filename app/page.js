@@ -1,12 +1,9 @@
-import { Button } from "@/components/ui/button";
-
-import Link from 'next/link';
-
+import Login from "@/app/auth/page";
 
 export default function Home() {
   return (
     <div>
-      <Button> <Link href={"/dashboard"}>Click Here</Link></Button>
+      <Login/>
     </div>
   );
 } 
