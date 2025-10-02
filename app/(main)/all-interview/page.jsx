@@ -1,62 +1,53 @@
-"use client"
-import React, { useState, useEffect } from 'react'; // Standard React import
 
+"use client"
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Video } from 'lucide-react';
 import Link from 'next/link';
-import { useUser } from '@/hooks/useUser'; // Adjust path if needed
+import { useUser } from '@/app/provider'; // Using the consistent provider path
 import { supabase } from '@/services/supabaseClient';
 import InterviewCard from '../dashboard/_components/InterviewCard';
 
-// FIX 1: Component name must be in PascalCase (e.g., AllInterview instead of allInterview)
 function AllInterview() { 
     const [interviewList, setInterviewList] = useState([]);
-    const { user, isLoading } = useUser();
+    const { user, loading } = useUser(); // Changed isLoading to loading to match provider
 
     useEffect(() => {
-        // Fetch interviews only when user data is available and not loading
-        if (user && !isLoading) {
+        if (user && !loading) { // Changed isLoading to loading
             getInterviewList();
         }
-    }, [user, isLoading]);
+    }, [user, loading]); // Changed isLoading to loading
 
     const getInterviewList = async () => {
-        console.log('Fetching interviews for email:', user?.email);
-        
-        // Ensure user and user.email exist before making the query
         if (!user?.email) {
-            console.log('User email is not available, skipping fetch.');
             return;
         }
 
         const { data, error } = await supabase
             .from('Interview')
-            .select('*')
-            .eq('email', user.email)
+            .select('*, interview-feedback(userEmail)')
+            .eq('email', user.email) // Matching the dashboard query logic
             .order('id', { ascending: false });
 
         if (error) {
-            console.error('Error fetching interviews:', error);
-            // Optionally, you could set an error state here to show in the UI
+            console.error('Error fetching all interviews:', error);
+            setInterviewList([]);
             return;
         }
 
-        console.log('Fetched Interview data:', data);
         setInterviewList(data || []);
     }
 
-    if (isLoading) {
+    if (loading) { // Changed isLoading to loading
         return <div className="my-5 text-center">Loading user data...</div>;
     }
 
     return (
-        <div className="">
-            <h2 className="my-3 font-bold ml-3 text-2xl">All Previously Created Interviews</h2>
-            {/* FIX 2: Check if the list has items to decide what to render. This is clearer. */}
+        <div className="p-10">
+            <h2 className="font-bold text-2xl mb-8">All Previously Created Interviews</h2>
             {interviewList.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                     {interviewList.map((interview) => (
-                        // FIX 3: Use a unique and stable ID from your data as the key, not the index.
                         <InterviewCard interview={interview} key={interview.id} /> 
                     ))}
                 </div>
