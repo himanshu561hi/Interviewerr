@@ -62,7 +62,7 @@ function QuestionList({ questions, loading, formData, onFinish, onCreateLink }) 
           },
         ])
         .select();
-        //update user credit
+          
 
       setSaveLoading(false);
       onCreateLink(interview_Id);

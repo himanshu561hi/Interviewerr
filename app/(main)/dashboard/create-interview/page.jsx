@@ -16,6 +16,7 @@ export default function CreateInterview({ onFinish }) {
   const [questions, setQuestions] = useState([]);
   const [interview_Id, setInterviewId] = useState();
 
+
   const onHandleInputChange = useCallback(
     (field, value) => {
       setFormData((prev) => ({
@@ -27,6 +28,7 @@ export default function CreateInterview({ onFinish }) {
   );
 
   const onGenerateQuestionsClick = useCallback(async () => {
+    
     if (
       !formData.jobPosition ||
       !formData.jobDescription ||
