@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Clock, Calendar, Tag, MessageCircleQuestionIcon } from 'lucide-react';
+import { Clock, Calendar, Tag } from 'lucide-react';
 import { format } from 'date-fns';
 
 const InterviewDetailContainer = ({ interviewDetail }) => {
@@ -76,9 +76,11 @@ const InterviewDetailContainer = ({ interviewDetail }) => {
             <div className="mt-5">
                 <h2 className="font-bold">Interview Questions</h2>
                 <div className="grid grid-cols-2 mt-3 gap-3">
-                    {interviewDetail.questionList.map((item, index)=>(
-                        <h2 className="text-xs flex">{index+1}.{item?.question}</h2>
-                    ))}
+                    {interviewDetail.questionList.map((item, index) => (
+    <div key={index} className="grid-cols-2 mt-3 gap-3">
+        <h2 className="text-xs flex">{index+1}. {item?.question}</h2>
+    </div>
+))}
                 </div>
             </div>
         </div>
