@@ -13,6 +13,17 @@ import { Progress } from "@/components/ui/progress";
 const CandidateFeedbackDialog = ({ candidate }) => {
   const feedback = candidate?.feedback?.feedback;
 
+  const totalScore = 
+    (feedback?.rating?.technicalSkills) +
+    (feedback?.rating?.communication) +
+    (feedback?.rating?.problemSolving) +
+    (feedback?.rating?.experience);
+
+
+const finalResult = totalScore > 0 
+    ? (totalScore/40*10).toFixed(1)
+    : 0;
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -38,7 +49,7 @@ const CandidateFeedbackDialog = ({ candidate }) => {
                   </div>
                 </div>
                 <div className="flex gap-3 items-center">
-                  <h2 className="font-bold text-primary text-2xl">6/10</h2>
+                  <h2 className="font-bold text-primary text-2xl">{finalResult}</h2>
                 </div>
               </div>
 
@@ -97,7 +108,7 @@ const CandidateFeedbackDialog = ({ candidate }) => {
               </div>
               <div
                 className={`p-5 mt-5 flex items-center justify-between rounded-md ${
-                  feedback?.Recommendation == "No"
+                  feedback?.Recommendation == "NoT"
                     ? "bg-red-100"
                     : "bg-green-100"
                 }`}
@@ -105,7 +116,7 @@ const CandidateFeedbackDialog = ({ candidate }) => {
                 <div>
                     <h2
                         className={`font-bold ${
-                        feedback?.Recommendation == "No"
+                        feedback?.Recommendation == "Not"
                             ? "text-red-700"
                             : "text-green-700"
                         }`}
@@ -114,7 +125,7 @@ const CandidateFeedbackDialog = ({ candidate }) => {
                     </h2>
                     <p
                         className={`${
-                        feedback?.Recommendation == "No"
+                        feedback?.Recommendation == "Not"
                             ? "text-red-500"
                             : "text-green-500"
                         }`}
@@ -123,7 +134,7 @@ const CandidateFeedbackDialog = ({ candidate }) => {
                     </p>
                 </div>
                 <Button className={`${
-                        feedback?.Recommendation == "No"
+                        feedback?.Recommendation == "Not"
                             ? "bg-red-700"
                             : "bg-green-700"
                         }`}>Send Msg</Button>

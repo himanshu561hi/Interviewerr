@@ -6,8 +6,7 @@ import Link from 'next/link';
 export default function Home() {
   return (
     <div>
-      <h4>Himanshu Gupta</h4>
-      <Button> <Link href={"/dashboard"}>Subscribe</Link></Button>
+      <Button> <Link href={"/dashboard"}>Click Here</Link></Button>
     </div>
   );
 } 

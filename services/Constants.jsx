@@ -16,17 +16,17 @@ export const SideBarOptions = [
         name: "All Interview",
         href: "/all-interview",
         icon: List       
-    },
-    {
-        name: "Billing",
-        href: "/billing",
-        icon: WalletCards       
-    },
-    {
-        name: "Settings",
-        href: "/settings",
-        icon: Settings       
     }
+    // {
+    //     name: "Billing",
+    //     href: "/billing",
+    //     icon: WalletCards       
+    // },
+    // {
+    //     name: "Settings",
+    //     href: "/settings",
+    //     icon: Settings       
+    // }
 ]
 
 export const InterviewType = [
