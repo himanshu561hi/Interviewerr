@@ -104,7 +104,6 @@ export default function CreateInterview({ onFinish }) {
         <Toaster position="bottom-right" />
       </div>
       
-      {/* ⭐ FOOTER ADDED HERE ⭐ */}
       <Footer />
     </div>
     

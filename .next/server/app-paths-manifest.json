@@ -1,7 +1,8 @@
 {
+  "/auth/page": "app/auth/page.js",
   "/(main)/all-interview/page": "app/(main)/all-interview/page.js",
   "/interview/[interview_Id]/page": "app/interview/[interview_Id]/page.js",
+  "/(main)/dashboard/page": "app/(main)/dashboard/page.js",
   "/interview/[interview_Id]/start/page": "app/interview/[interview_Id]/start/page.js",
-  "/interview/[interview_Id]/completed/page": "app/interview/[interview_Id]/completed/page.js",
-  "/(main)/dashboard/page": "app/(main)/dashboard/page.js"
+  "/interview/[interview_Id]/completed/page": "app/interview/[interview_Id]/completed/page.js"
 }

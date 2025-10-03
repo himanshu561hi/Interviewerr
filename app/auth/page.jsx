@@ -27,7 +27,7 @@ function Login() {
             <Image src="/logo.png" alt="Logo" 
             width={350} 
             height={200}
-            className="w-[280px]" />
+            className="w-[280px] mb-8" />
         
             <div className="flex flex-col items-center">
                 <Image src="/Login.png" alt="Login" 
