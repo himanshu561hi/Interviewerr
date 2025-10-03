@@ -44,7 +44,7 @@ AI Interview Taker is a web app that lets students and job seekers practice inte
 <h2 id="structure">🗂️ Folder & File Structure</h2>
 
 <pre>
-INTERVIEWER/
+INTERVIEWERR/
 ├── .next/
 ├── app/
 │   ├── (main)/
