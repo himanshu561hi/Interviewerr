@@ -130,7 +130,7 @@ function AllInterview() {
             {/* Enhanced Responsive Content Container: 
                 p-4 (mobile) to p-8 (laptop/desktop) 
                 min-h-[80vh] ensures the content area takes up most of the viewport before the footer */}
-            <div className="flex-grow p-4 sm:p-6 md:p-8 min-h-[80vh] mb-10"> 
+            <div className="flex-grow sm:p-6 md:p-8 min-h-[80vh] mb-10"> 
                 {/* Responsive Heading: text-xl (mobile) to text-3xl (desktop), mb-6/8 */}
                 <h2 className="font-bold text-xl sm:text-2xl lg:text-3xl mb-6 md:mb-8">All Previously Created Interviews</h2>
                 

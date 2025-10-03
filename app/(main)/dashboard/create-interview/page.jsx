@@ -72,7 +72,6 @@ export default function CreateInterview({ onFinish }) {
   };
 
   return (
-    // Main wrapper div for the entire page content
     <div className="flex flex-col">
       <div className="mt-5 p md:px-5 lg:px-10 xl:px-20 flex-grow">
         <div className="flex items-center gap-5 ">

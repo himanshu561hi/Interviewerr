@@ -45,7 +45,7 @@ function ScheduledInterview() {
   return (
     // Use a React Fragment to wrap both the content and the footer
     <>
-      <div className="p-5 mb-10"> {/* Added padding to the content div for spacing */}
+      <div className="mb-10"> {/* Added padding to the content div for spacing */}
         <h2 className="font-bold text-2xl mb-8">Interview List With Candidate Feedback</h2>
         {interviewList && interviewList.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

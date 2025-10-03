@@ -30,6 +30,16 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/api/ai-model/route.js"
+    ],
+    "/(main)/scheduled-interview/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(main)/scheduled-interview/page.js"
+    ],
+    "/(main)/all-interview/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(main)/all-interview/page.js"
     ]
   }
 }
