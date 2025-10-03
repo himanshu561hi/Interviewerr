@@ -4,12 +4,12 @@
   "/api/ai-model/route": "/api/ai-model",
   "/auth/page": "/auth",
   "/page": "/",
-  "/(main)/scheduled-interview/[interview_Id]/Details/page": "/scheduled-interview/[interview_Id]/Details",
-  "/(main)/scheduled-interview/page": "/scheduled-interview",
   "/(main)/dashboard/create-interview/page": "/dashboard/create-interview",
-  "/(main)/dashboard/page": "/dashboard",
-  "/interview/[interview_Id]/page": "/interview/[interview_Id]",
   "/(main)/all-interview/page": "/all-interview",
-  "/interview/[interview_Id]/completed/page": "/interview/[interview_Id]/completed",
-  "/interview/[interview_Id]/start/page": "/interview/[interview_Id]/start"
+  "/(main)/dashboard/page": "/dashboard",
+  "/interview/[interview_Id]/start/page": "/interview/[interview_Id]/start",
+  "/(main)/scheduled-interview/page": "/scheduled-interview",
+  "/(main)/scheduled-interview/[interview_Id]/Details/page": "/scheduled-interview/[interview_Id]/Details",
+  "/interview/[interview_Id]/page": "/interview/[interview_Id]",
+  "/interview/[interview_Id]/completed/page": "/interview/[interview_Id]/completed"
 }
