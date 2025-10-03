@@ -1,3 +1,4 @@
+
 "use client";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -7,6 +8,7 @@ import FormContainer from "./_components/FormContainer";
 import QuestionList from "./_components/QuestionList";
 import { Toaster, toast } from "sonner";
 import InterviewLink from "./_components/InterviewLink";
+import Footer from "../../footer/page"; // Footer is imported here
 
 export default function CreateInterview({ onFinish }) {
   const Router = useRouter();
@@ -70,32 +72,42 @@ export default function CreateInterview({ onFinish }) {
   };
 
   return (
-    <div className="mt-5 px-10 md:px-24 lg:px-44 xl:px-56">
-      <div className="flex items-center gap-5 ">
-        <ArrowLeft onClick={() => Router.back()} className="cursor-pointer" />
-        <h2 className="text-2xl font-bold">Create New Interview</h2>
-      </div>
-      <Progress value={step * 33.33} className="my-5" />
-      {step === 1 ? (
-        <FormContainer
-          formData={formData}
-          onHandleInputChange={onHandleInputChange}
-          onGenerateQuestionsClick={onGenerateQuestionsClick}
-          loading={loading}
-        />
-      ) : step === 2 ? (
-        <QuestionList
-          questions={questions}
-          loading={loading}
-          formData={formData}
-          onFinish={onFinish}
-          onCreateLink={(interview_Id) => onCreateLink(interview_Id)}
-        />
-      ) : step == 3 ? (
-        <InterviewLink interview_Id={interview_Id} formData={formData} />
-      ) : null}
+    // Main wrapper div for the entire page content
+    <div className="flex flex-col min-h-screen">
+      <div className="mt-5 px-10 md:px-24 lg:px-44 xl:px-56 flex-grow">
+        <div className="flex items-center gap-5 ">
+          <ArrowLeft onClick={() => Router.back()} className="cursor-pointer" />
+          <h2 className="text-2xl font-bold">Create New Interview</h2>
+        </div>
+        <Progress value={step * 33.33} className="my-5" />
+        
+        {/* Step Content */}
+        {step === 1 ? (
+          <FormContainer
+            formData={formData}
+            onHandleInputChange={onHandleInputChange}
+            onGenerateQuestionsClick={onGenerateQuestionsClick}
+            loading={loading}
+          />
+        ) : step === 2 ? (
+          <QuestionList
+            questions={questions}
+            loading={loading}
+            formData={formData}
+            onFinish={onFinish}
+            onCreateLink={(interview_Id) => onCreateLink(interview_Id)}
+          />
+        ) : step == 3 ? (
+          <InterviewLink interview_Id={interview_Id} formData={formData} />
+        ) : null}
 
-      <Toaster position="bottom-right" />
+        <Toaster position="bottom-right" />
+      </div>
+      
+      {/* ⭐ FOOTER ADDED HERE ⭐ */}
+      <Footer />
     </div>
+    
   );
+ 
 }

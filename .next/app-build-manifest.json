@@ -35,6 +35,36 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(main)/dashboard/create-interview/page.js"
+    ],
+    "/api/ai-model/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/ai-model/route.js"
+    ],
+    "/interview/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/interview/layout.js"
+    ],
+    "/interview/[interview_Id]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/interview/[interview_Id]/page.js"
+    ],
+    "/interview/[interview_Id]/start/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/interview/[interview_Id]/start/page.js"
+    ],
+    "/api/ai-feedback/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/ai-feedback/route.js"
+    ],
+    "/interview/[interview_Id]/completed/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/interview/[interview_Id]/completed/page.js"
     ]
   }
 }

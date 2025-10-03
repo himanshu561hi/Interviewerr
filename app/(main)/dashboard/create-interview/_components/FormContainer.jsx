@@ -3,6 +3,7 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import Footer from "../../../footer/page";
 import {
   Select,
   SelectContent,
@@ -85,6 +86,7 @@ function FormContainer({ onHandleInputChange, onGenerateQuestionsClick, formData
           ))}
         </div>
       </div>
+     
       <div className="mt-7 flex justify-end">
         <Button onClick={onGenerateQuestionsClick} disabled={!isFormComplete || loading}>
           {loading ? (
@@ -94,11 +96,18 @@ function FormContainer({ onHandleInputChange, onGenerateQuestionsClick, formData
           ) : (
             <>
               Generate Questions <ArrowRight className="ml-2" />
+              
             </>
+            
           )}
         </Button>
       </div>
+       
+       
     </div>
+
   );
+  
 }
+
 export default FormContainer;

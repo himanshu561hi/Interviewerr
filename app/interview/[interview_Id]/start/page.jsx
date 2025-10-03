@@ -1,3 +1,4 @@
+
 "use client";
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { InterviewDataContext } from "@/context/InterviewDataContext";
@@ -8,6 +9,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { supabase } from "@/services/supabaseClient";
 import { useParams } from "next/navigation";
+import Footer from "@/app/(main)/footer/page";
 
 function StartInterview() {
   const { interviewInfo, setInterviewInfo } = useContext(
@@ -333,7 +335,8 @@ function StartInterview() {
     : "U";
 
   return (
-    <div className="p-20 lg:px-48 xl:px-56">
+    // Set component to take full screen height and use flex column layout
+    <div className="min-h-screen flex flex-col"> 
       <style>
         {`
                     @keyframes pulse {
@@ -351,60 +354,68 @@ function StartInterview() {
                     }
                 `}
       </style>
-      <h2 className="font-semibold text-sm">
-        ({interviewInfo?.interviewData?.jobPosition || "Loading..."})
-      </h2>
-      <h2 className="font-bold text-xl flex items-center justify-between">
-        AI - Interview Session
-        <span className="flex gap-2 items-center">
-          <Timer />
-          {formatTime(time)}
-        </span>
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-7 mt-5">
-        <div className="bg-white h-[300px] rounded-lg border flex flex-col justify-center items-center relative">
-          <div className="relative">
-            {isAiSpeaking && <span className="pulse-ring border-green-500" />}
-            <Image
-              src="/ai.jpeg"
-              alt="AI"
-              width={100}
-              height={100}
-              className="w-[60px] h-[60px] rounded-full object-cover z-10 relative"
+      
+      {/* Main content div takes up remaining space and handles inner padding */}
+      <div className="p-20 lg:px-48 xl:px-56 flex-grow">
+          <h2 className="font-semibold text-sm">
+            ({interviewInfo?.interviewData?.jobPosition || "Loading..."})
+          </h2>
+          <h2 className="font-bold text-xl flex items-center justify-between">
+            AI - Interview Session
+            <span className="flex gap-2 items-center">
+              <Timer />
+              {formatTime(time)}
+            </span>
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-7 mt-5">
+            <div className="bg-white h-[300px] rounded-lg border flex flex-col justify-center items-center relative">
+              <div className="relative">
+                {isAiSpeaking && <span className="pulse-ring border-green-500" />}
+                <Image
+                  src="/ai.jpeg"
+                  alt="AI"
+                  width={100}
+                  height={100}
+                  className="w-[60px] h-[60px] rounded-full object-cover z-10 relative"
+                />
+              </div>
+              <h2 className="text-sm font-semibold mt-2 z-10 relative">
+                AI Interviewer
+              </h2>
+            </div>
+            <div className="bg-white h-[300px] rounded-lg border flex flex-col justify-center items-center relative">
+              <div className="relative">
+                {isUserSpeaking && <span className="pulse-ring border-blue-500" />}
+                <h2 className="text-2xl bg-primary text-white p-3 rounded-full px-6 z-10 relative">
+                  {userInitial}
+                </h2>
+              </div>
+              <h2 className="text-sm mt-2 font-semibold z-10 relative">
+                {interviewInfo?.userName || "Guest"}
+              </h2>
+            </div>
+          </div>
+          <div className="flex items-center justify-center gap-4 mt-7">
+            <Mic
+              className={`w-12 h-12 rounded-full text-white p-3 cursor-pointer transition-colors ${
+                isMuted ? "bg-gray-500" : "bg-green-500"
+              }`}
+              onClick={toggleMic}
+            />
+            <Phone
+              className="w-12 h-12 rounded-full bg-red-500 text-white p-3 cursor-pointer"
+              onClick={endCall}
             />
           </div>
-          <h2 className="text-sm font-semibold mt-2 z-10 relative">
-            AI Interviewer
+          <h2 className="text-center text-sm text-gray-500 mt-4">
+            {isCallActive ? "Interview in progress..." : "Starting interview..."}
           </h2>
-        </div>
-        <div className="bg-white h-[300px] rounded-lg border flex flex-col justify-center items-center relative">
-          <div className="relative">
-            {isUserSpeaking && <span className="pulse-ring border-blue-500" />}
-            <h2 className="text-2xl bg-primary text-white p-3 rounded-full px-6 z-10 relative">
-              {userInitial}
-            </h2>
-          </div>
-          <h2 className="text-sm mt-2 font-semibold z-10 relative">
-            {interviewInfo?.userName || "Guest"}
-          </h2>
-        </div>
       </div>
-      <div className="flex items-center justify-center gap-4 mt-7">
-        <Mic
-          className={`w-12 h-12 rounded-full text-white p-3 cursor-pointer transition-colors ${
-            isMuted ? "bg-gray-500" : "bg-green-500"
-          }`}
-          onClick={toggleMic}
-        />
-        <Phone
-          className="w-12 h-12 rounded-full bg-red-500 text-white p-3 cursor-pointer"
-          onClick={endCall}
-        />
-      </div>
-      <h2 className="text-center text-sm text-gray-500 mt-4">
-        {isCallActive ? "Interview in progress..." : "Starting interview..."}
-      </h2>
+      
+      {/* Footer is correctly placed at the bottom of the component */}
+      <Footer />
     </div>
+    
   );
 }
 

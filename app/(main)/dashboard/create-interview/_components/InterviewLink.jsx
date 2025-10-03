@@ -87,7 +87,7 @@ function InterviewLink({ interview_Id, formData }) {
           </Button>
         </div>
       </div>
-      <div className="mt-5 flex justify-between w-full px-5">
+      <div className="mt-5 mb-5 flex justify-between w-full px-5">
         <Link href={"/dashboard"}>
           <Button variant={"outline"}>
             <ArrowLeft /> Back to Dashboard
