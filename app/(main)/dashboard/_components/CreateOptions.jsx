@@ -14,7 +14,10 @@ function CreateOptions() {
                 </Link>
             </div>
             <div className="bg-white p-5 border border-gray-200 rounded-xl cursor-pointer hover:shadow-lg transition">
+                <div className="flex items-center justify-between">
                 <Phone className="p-3 text-primary bg-blue-50 rounded-lg w-12 h-12"/>
+                <h2 className="font-bold text-gray-500 mr-10">Coming Soon</h2>
+                </div>
                 <h2 className="font-bold mt-3">Create Phone Screening Call</h2>
                 <p className="text-gray-500">Schedule phone screening call with candidates</p>
             </div>
