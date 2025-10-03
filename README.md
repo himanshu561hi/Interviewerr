@@ -70,7 +70,7 @@ INTERVIEWER/
 │   │   │   │   └── page.jsx
 │   │   │   └── page.jsx
 │   │   └── scheduled-interview/
-            └── page.jsx
+|   |       └── page.jsx
 │   │       └── [interview_Id]/
 │   │           └── Details/
 │   │               ├── _components/
