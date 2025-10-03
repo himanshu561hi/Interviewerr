@@ -1,10 +1,19 @@
-# Dependencies
-node_modules/
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
-# Build output
-.next/
-out/
-dist/
+# testing
+/coverage
+
+# next.js
+.env
+/out/
 
 # Logs
 npm-debug.log*

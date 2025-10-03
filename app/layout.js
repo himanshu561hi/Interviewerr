@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "AI Interview Schedule voice agent",
-  description: "Schedule Interview for Interviewer",
+  title: "AI Interviewer ",
+  description: " AI Interviewer is an AI-powered interview practice tool that helps you prepare for job interviews by simulating real interview scenarios.",
 };
 
 export default function RootLayout({ children }) {
