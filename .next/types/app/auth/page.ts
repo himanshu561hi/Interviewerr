@@ -1,4 +1,4 @@
-// File: C:\Users\amang\Pictures\Interviewer\app\auth\page.jsx
+// File: /Volumes/Himanshu/Himanshu/GitHub Repos/Interviewer/app/auth/page.jsx
 import * as entry from '../../../../app/auth/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

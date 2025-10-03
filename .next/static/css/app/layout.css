@@ -1,6 +1,6 @@
-/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[2].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[14].oneOf[2].use[2]!./node_modules/next/font/google/target.css?{"path":"app\\layout.js","import":"Geist","arguments":[{"variable":"--font-geist-sans","subsets":["latin"]}],"variableName":"geistSans"} ***!
-  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[2].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[14].oneOf[2].use[2]!./node_modules/next/font/google/target.css?{"path":"app/layout.js","import":"Geist","arguments":[{"variable":"--font-geist-sans","subsets":["latin"]}],"variableName":"geistSans"} ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /* cyrillic */
 @font-face {
   font-family: 'Geist';
@@ -32,9 +32,9 @@
 }.__variable_188709 {--font-geist-sans: 'Geist', 'Geist Fallback'
 }
 
-/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[2].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[14].oneOf[2].use[2]!./node_modules/next/font/google/target.css?{"path":"app\\layout.js","import":"Geist_Mono","arguments":[{"variable":"--font-geist-mono","subsets":["latin"]}],"variableName":"geistMono"} ***!
-  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[2].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[14].oneOf[2].use[2]!./node_modules/next/font/google/target.css?{"path":"app/layout.js","import":"Geist_Mono","arguments":[{"variable":"--font-geist-mono","subsets":["latin"]}],"variableName":"geistMono"} ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /* cyrillic */
 @font-face {
   font-family: 'Geist Mono';
@@ -82,15 +82,15 @@
     --color-green-500: oklch(72.3% 0.219 149.579);
     --color-green-600: oklch(62.7% 0.194 149.214);
     --color-green-700: oklch(52.7% 0.154 150.069);
+    --color-emerald-400: oklch(76.5% 0.177 163.223);
     --color-blue-50: oklch(97% 0.014 254.604);
     --color-blue-100: oklch(93.2% 0.032 255.585);
     --color-blue-200: oklch(88.2% 0.059 254.128);
-    --color-blue-300: oklch(80.9% 0.105 251.813);
-    --color-blue-400: oklch(70.7% 0.165 254.624);
     --color-blue-500: oklch(62.3% 0.214 259.815);
     --color-blue-600: oklch(54.6% 0.245 262.881);
-    --color-blue-700: oklch(48.8% 0.243 264.376);
     --color-blue-800: oklch(42.4% 0.199 265.638);
+    --color-indigo-600: oklch(51.1% 0.262 276.966);
+    --color-indigo-700: oklch(45.7% 0.24 277.023);
     --color-gray-100: oklch(96.7% 0.003 264.542);
     --color-gray-200: oklch(92.8% 0.006 264.531);
     --color-gray-300: oklch(87.2% 0.01 258.338);
@@ -104,7 +104,6 @@
     --color-white: #fff;
     --spacing: 0.25rem;
     --container-sm: 24rem;
-    --container-md: 28rem;
     --container-2xl: 42rem;
     --container-3xl: 48rem;
     --container-7xl: 80rem;
@@ -120,10 +119,14 @@
     --text-xl--line-height: calc(1.75 / 1.25);
     --text-2xl: 1.5rem;
     --text-2xl--line-height: calc(2 / 1.5);
+    --text-3xl: 1.875rem;
+    --text-3xl--line-height: calc(2.25 / 1.875);
     --font-weight-normal: 400;
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+    --tracking-wider: 0.05em;
     --tracking-widest: 0.1em;
     --leading-relaxed: 1.625;
     --radius-xs: 0.125rem;
@@ -290,6 +293,9 @@
   .pointer-events-none {
     pointer-events: none;
   }
+  .visible {
+    visibility: visible;
+  }
   .sr-only {
     position: absolute;
     width: 1px;
@@ -361,6 +367,9 @@
   .left-2 {
     left: calc(var(--spacing) * 2);
   }
+  .left-4 {
+    left: calc(var(--spacing) * 4);
+  }
   .left-\[50\%\] {
     left: 50%;
   }
@@ -372,6 +381,12 @@
   }
   .z-50 {
     z-index: 50;
+  }
+  .order-1 {
+    order: 1;
+  }
+  .order-2 {
+    order: 2;
   }
   .col-span-2 {
     grid-column: span 2 / span 2;
@@ -442,9 +457,6 @@
   .mt-7 {
     margin-top: calc(var(--spacing) * 7);
   }
-  .mt-8 {
-    margin-top: calc(var(--spacing) * 8);
-  }
   .mt-10 {
     margin-top: calc(var(--spacing) * 10);
   }
@@ -457,8 +469,14 @@
   .mr-2 {
     margin-right: calc(var(--spacing) * 2);
   }
+  .mr-3 {
+    margin-right: calc(var(--spacing) * 3);
+  }
   .mr-10 {
     margin-right: calc(var(--spacing) * 10);
+  }
+  .mb-2 {
+    margin-bottom: calc(var(--spacing) * 2);
   }
   .mb-3 {
     margin-bottom: calc(var(--spacing) * 3);
@@ -483,6 +501,9 @@
   }
   .ml-3 {
     margin-left: calc(var(--spacing) * 3);
+  }
+  .ml-4 {
+    margin-left: calc(var(--spacing) * 4);
   }
   .ml-10 {
     margin-left: calc(var(--spacing) * 10);
@@ -547,6 +568,9 @@
   .h-5 {
     height: calc(var(--spacing) * 5);
   }
+  .h-6 {
+    height: calc(var(--spacing) * 6);
+  }
   .h-7 {
     height: calc(var(--spacing) * 7);
   }
@@ -561,9 +585,6 @@
   }
   .h-12 {
     height: calc(var(--spacing) * 12);
-  }
-  .h-32 {
-    height: calc(var(--spacing) * 32);
   }
   .h-\[40px\] {
     height: 40px;
@@ -613,9 +634,6 @@
   .min-h-16 {
     min-height: calc(var(--spacing) * 16);
   }
-  .min-h-screen {
-    min-height: 100vh;
-  }
   .min-h-svh {
     min-height: 100svh;
   }
@@ -631,6 +649,9 @@
   .w-5 {
     width: calc(var(--spacing) * 5);
   }
+  .w-6 {
+    width: calc(var(--spacing) * 6);
+  }
   .w-8 {
     width: calc(var(--spacing) * 8);
   }
@@ -639,9 +660,6 @@
   }
   .w-12 {
     width: calc(var(--spacing) * 12);
-  }
-  .w-32 {
-    width: calc(var(--spacing) * 32);
   }
   .w-\[40px\] {
     width: 40px;
@@ -687,9 +705,6 @@
   }
   .max-w-\[calc\(100\%-2rem\)\] {
     max-width: calc(100% - 2rem);
-  }
-  .max-w-md {
-    max-width: var(--container-md);
   }
   .min-w-0 {
     min-width: calc(var(--spacing) * 0);
@@ -826,6 +841,9 @@
   .gap-8 {
     gap: calc(var(--spacing) * 8);
   }
+  .gap-12 {
+    gap: calc(var(--spacing) * 12);
+  }
   .space-y-2 {
     :where(& > :not(:last-child)) {
       --tw-space-y-reverse: 0;
@@ -833,11 +851,25 @@
       margin-block-end: calc(calc(var(--spacing) * 2) * calc(1 - var(--tw-space-y-reverse)));
     }
   }
+  .space-y-3 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 3) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 3) * calc(1 - var(--tw-space-y-reverse)));
+    }
+  }
   .space-x-4 {
     :where(& > :not(:last-child)) {
       --tw-space-x-reverse: 0;
       margin-inline-start: calc(calc(var(--spacing) * 4) * var(--tw-space-x-reverse));
       margin-inline-end: calc(calc(var(--spacing) * 4) * calc(1 - var(--tw-space-x-reverse)));
+    }
+  }
+  .space-x-6 {
+    :where(& > :not(:last-child)) {
+      --tw-space-x-reverse: 0;
+      margin-inline-start: calc(calc(var(--spacing) * 6) * var(--tw-space-x-reverse));
+      margin-inline-end: calc(calc(var(--spacing) * 6) * calc(1 - var(--tw-space-x-reverse)));
     }
   }
   .overflow-auto {
@@ -851,9 +883,6 @@
   }
   .overflow-y-auto {
     overflow-y: auto;
-  }
-  .rounded {
-    border-radius: 0.25rem;
   }
   .rounded-2xl {
     border-radius: var(--radius-2xl);
@@ -914,8 +943,8 @@
   .border-gray-300 {
     border-color: var(--color-gray-300);
   }
-  .border-gray-700 {
-    border-color: var(--color-gray-700);
+  .border-gray-400 {
+    border-color: var(--color-gray-400);
   }
   .border-green-500 {
     border-color: var(--color-green-500);
@@ -935,9 +964,6 @@
   .bg-background {
     background-color: var(--background);
   }
-  .bg-black {
-    background-color: var(--color-black);
-  }
   .bg-black\/50 {
     background-color: color-mix(in srgb, #000 50%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -950,9 +976,6 @@
   .bg-blue-100 {
     background-color: var(--color-blue-100);
   }
-  .bg-blue-600 {
-    background-color: var(--color-blue-600);
-  }
   .bg-border {
     background-color: var(--border);
   }
@@ -962,17 +985,11 @@
   .bg-gray-100 {
     background-color: var(--color-gray-100);
   }
+  .bg-gray-200 {
+    background-color: var(--color-gray-200);
+  }
   .bg-gray-500 {
     background-color: var(--color-gray-500);
-  }
-  .bg-gray-600 {
-    background-color: var(--color-gray-600);
-  }
-  .bg-gray-800 {
-    background-color: var(--color-gray-800);
-  }
-  .bg-gray-900 {
-    background-color: var(--color-gray-900);
   }
   .bg-green-100 {
     background-color: var(--color-green-100);
@@ -1109,11 +1126,20 @@
   .py-2 {
     padding-block: calc(var(--spacing) * 2);
   }
-  .py-8 {
-    padding-block: calc(var(--spacing) * 8);
+  .py-10 {
+    padding-block: calc(var(--spacing) * 10);
   }
-  .pt-4 {
-    padding-top: calc(var(--spacing) * 4);
+  .py-12 {
+    padding-block: calc(var(--spacing) * 12);
+  }
+  .pt-2 {
+    padding-top: calc(var(--spacing) * 2);
+  }
+  .pt-6 {
+    padding-top: calc(var(--spacing) * 6);
+  }
+  .pt-8 {
+    padding-top: calc(var(--spacing) * 8);
   }
   .pr-2 {
     padding-right: calc(var(--spacing) * 2);
@@ -1124,11 +1150,17 @@
   .pr-10 {
     padding-right: calc(var(--spacing) * 10);
   }
+  .pb-8 {
+    padding-bottom: calc(var(--spacing) * 8);
+  }
   .pb-10 {
     padding-bottom: calc(var(--spacing) * 10);
   }
   .pl-2 {
     padding-left: calc(var(--spacing) * 2);
+  }
+  .pl-4 {
+    padding-left: calc(var(--spacing) * 4);
   }
   .pl-8 {
     padding-left: calc(var(--spacing) * 8);
@@ -1142,6 +1174,10 @@
   .text-2xl {
     font-size: var(--text-2xl);
     line-height: var(--tw-leading, var(--text-2xl--line-height));
+  }
+  .text-3xl {
+    font-size: var(--text-3xl);
+    line-height: var(--tw-leading, var(--text-3xl--line-height));
   }
   .text-base {
     font-size: var(--text-base);
@@ -1178,6 +1214,10 @@
     --tw-font-weight: var(--font-weight-bold);
     font-weight: var(--font-weight-bold);
   }
+  .font-extrabold {
+    --tw-font-weight: var(--font-weight-extrabold);
+    font-weight: var(--font-weight-extrabold);
+  }
   .font-medium {
     --tw-font-weight: var(--font-weight-medium);
     font-weight: var(--font-weight-medium);
@@ -1190,6 +1230,10 @@
     --tw-font-weight: var(--font-weight-semibold);
     font-weight: var(--font-weight-semibold);
   }
+  .tracking-wider {
+    --tw-tracking: var(--tracking-wider);
+    letter-spacing: var(--tracking-wider);
+  }
   .tracking-widest {
     --tw-tracking: var(--tracking-widest);
     letter-spacing: var(--tracking-widest);
@@ -1200,9 +1244,6 @@
   .whitespace-nowrap {
     white-space: nowrap;
   }
-  .text-blue-400 {
-    color: var(--color-blue-400);
-  }
   .text-blue-500 {
     color: var(--color-blue-500);
   }
@@ -1212,23 +1253,20 @@
   .text-blue-800 {
     color: var(--color-blue-800);
   }
+  .text-emerald-400 {
+    color: var(--color-emerald-400);
+  }
   .text-foreground {
     color: var(--foreground);
-  }
-  .text-gray-200 {
-    color: var(--color-gray-200);
-  }
-  .text-gray-300 {
-    color: var(--color-gray-300);
-  }
-  .text-gray-400 {
-    color: var(--color-gray-400);
   }
   .text-gray-500 {
     color: var(--color-gray-500);
   }
   .text-gray-600 {
     color: var(--color-gray-600);
+  }
+  .text-gray-700 {
+    color: var(--color-gray-700);
   }
   .text-gray-800 {
     color: var(--color-gray-800);
@@ -1244,6 +1282,9 @@
   }
   .text-green-700 {
     color: var(--color-green-700);
+  }
+  .text-indigo-700 {
+    color: var(--color-indigo-700);
   }
   .text-muted-foreground {
     color: var(--muted-foreground);
@@ -1278,15 +1319,15 @@
   .text-white {
     color: var(--color-white);
   }
+  .uppercase {
+    text-transform: uppercase;
+  }
   .italic {
     font-style: italic;
   }
   .tabular-nums {
     --tw-numeric-spacing: tabular-nums;
     font-variant-numeric: var(--tw-ordinal,) var(--tw-slashed-zero,) var(--tw-numeric-figure,) var(--tw-numeric-spacing,) var(--tw-numeric-fraction,);
-  }
-  .underline {
-    text-decoration-line: underline;
   }
   .underline-offset-4 {
     text-underline-offset: 4px;
@@ -1301,8 +1342,16 @@
   .opacity-70 {
     opacity: 70%;
   }
+  .shadow {
+    --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
   .shadow-\[0_0_0_1px_hsl\(var\(--sidebar-border\)\)\] {
     --tw-shadow: 0 0 0 1px var(--tw-shadow-color, hsl(var(--sidebar-border)));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .shadow-inner {
+    --tw-shadow: inset 0 2px 4px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.05));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
   .shadow-lg {
@@ -1429,6 +1478,9 @@
   .zoom-in-95 {
     --tw-enter-scale: calc(95*1%);
     --tw-enter-scale: .95;
+  }
+  .running {
+    animation-play-state: running;
   }
   .group-focus-within\/menu-item\:opacity-100 {
     &:is(:where(.group\/menu-item):focus-within *) {
@@ -1709,13 +1761,6 @@
       }
     }
   }
-  .hover\:bg-blue-700 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-blue-700);
-      }
-    }
-  }
   .hover\:bg-destructive\/90 {
     &:hover {
       @media (hover: hover) {
@@ -1723,13 +1768,6 @@
         @supports (color: color-mix(in lab, red, red)) {
           background-color: color-mix(in oklab, var(--destructive) 90%, transparent);
         }
-      }
-    }
-  }
-  .hover\:bg-gray-700 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-gray-700);
       }
     }
   }
@@ -1774,6 +1812,14 @@
       }
     }
   }
+  .hover\:font-medium {
+    &:hover {
+      @media (hover: hover) {
+        --tw-font-weight: var(--font-weight-medium);
+        font-weight: var(--font-weight-medium);
+      }
+    }
+  }
   .hover\:text-accent-foreground {
     &:hover {
       @media (hover: hover) {
@@ -1781,10 +1827,17 @@
       }
     }
   }
-  .hover\:text-blue-300 {
+  .hover\:text-emerald-400 {
     &:hover {
       @media (hover: hover) {
-        color: var(--color-blue-300);
+        color: var(--color-emerald-400);
+      }
+    }
+  }
+  .hover\:text-indigo-600 {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-indigo-600);
       }
     }
   }
@@ -1806,13 +1859,6 @@
     &:hover {
       @media (hover: hover) {
         color: var(--sidebar-accent-foreground);
-      }
-    }
-  }
-  .hover\:text-white {
-    &:hover {
-      @media (hover: hover) {
-        color: var(--color-white);
       }
     }
   }
@@ -2318,6 +2364,11 @@
       display: flex;
     }
   }
+  .sm\:inline {
+    @media (width >= 40rem) {
+      display: inline;
+    }
+  }
   .sm\:max-w-3xl {
     @media (width >= 40rem) {
       max-width: var(--container-3xl);
@@ -2326,6 +2377,11 @@
   .sm\:max-w-sm {
     @media (width >= 40rem) {
       max-width: var(--container-sm);
+    }
+  }
+  .sm\:grid-cols-2 {
+    @media (width >= 40rem) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
   .sm\:flex-row {
@@ -2338,6 +2394,11 @@
       justify-content: flex-end;
     }
   }
+  .sm\:justify-start {
+    @media (width >= 40rem) {
+      justify-content: flex-start;
+    }
+  }
   .sm\:px-6 {
     @media (width >= 40rem) {
       padding-inline: calc(var(--spacing) * 6);
@@ -2348,9 +2409,24 @@
       text-align: left;
     }
   }
+  .md\:order-1 {
+    @media (width >= 48rem) {
+      order: 1;
+    }
+  }
+  .md\:order-2 {
+    @media (width >= 48rem) {
+      order: 2;
+    }
+  }
   .md\:col-span-1 {
     @media (width >= 48rem) {
       grid-column: span 1 / span 1;
+    }
+  }
+  .md\:mt-0 {
+    @media (width >= 48rem) {
+      margin-top: calc(var(--spacing) * 0);
     }
   }
   .md\:block {
@@ -2361,6 +2437,11 @@
   .md\:flex {
     @media (width >= 48rem) {
       display: flex;
+    }
+  }
+  .md\:hidden {
+    @media (width >= 48rem) {
+      display: none;
     }
   }
   .md\:grid-cols-1 {
@@ -2378,6 +2459,21 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
+  .md\:grid-cols-4 {
+    @media (width >= 48rem) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .md\:flex-row {
+    @media (width >= 48rem) {
+      flex-direction: row;
+    }
+  }
+  .md\:justify-start {
+    @media (width >= 48rem) {
+      justify-content: flex-start;
+    }
+  }
   .md\:px-18 {
     @media (width >= 48rem) {
       padding-inline: calc(var(--spacing) * 18);
@@ -2391,6 +2487,11 @@
   .md\:px-28 {
     @media (width >= 48rem) {
       padding-inline: calc(var(--spacing) * 28);
+    }
+  }
+  .md\:text-left {
+    @media (width >= 48rem) {
+      text-align: left;
     }
   }
   .md\:text-sm {
@@ -2450,6 +2551,11 @@
       }
     }
   }
+  .lg\:col-span-1 {
+    @media (width >= 64rem) {
+      grid-column: span 1 / span 1;
+    }
+  }
   .lg\:grid-cols-1 {
     @media (width >= 64rem) {
       grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -2458,6 +2564,11 @@
   .lg\:grid-cols-3 {
     @media (width >= 64rem) {
       grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .lg\:grid-cols-5 {
+    @media (width >= 64rem) {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
     }
   }
   .lg\:px-8 {
