@@ -50,7 +50,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/all-interview": {
+    "/dashboard/create-interview": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -63,8 +63,32 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/all-interview",
-      "dataRoute": "/all-interview.rsc",
+      "srcRoute": "/dashboard/create-interview",
+      "dataRoute": "/dashboard/create-interview.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/auth": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/auth",
+      "dataRoute": "/auth.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -122,7 +146,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/dashboard/create-interview": {
+    "/all-interview": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -135,32 +159,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/dashboard/create-interview",
-      "dataRoute": "/dashboard/create-interview.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/auth": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/auth",
-      "dataRoute": "/auth.rsc",
+      "srcRoute": "/all-interview",
+      "dataRoute": "/all-interview.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
