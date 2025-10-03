@@ -4,15 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Video } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
-import { useUser } from '@/hooks/useUser'; // Adjust path if needed
+import { useUser } from '@/hooks/useUser';
 import { supabase } from '@/services/supabaseClient';
 import InterviewCard from './InterviewCard';
 
 function LatestInterviewList({interview}) {
     const [interviewList, setInterviewList] = useState([]);
     const { user, isLoading } = useUser();
-
-    
 
     useEffect(() => {
         console.log('useEffect triggered, user:', user);
@@ -28,7 +26,8 @@ function LatestInterviewList({interview}) {
             .from('Interview')
             .select('*')
             .eq('email', user?.email)
-            .order('id',{ascending: false})
+
+            .order('id',{ascending: false}) 
             .limit('6');
 
         if (error) {
@@ -42,23 +41,26 @@ function LatestInterviewList({interview}) {
 
     console.log('Component rendered - interviewList length:', interviewList.length);
 
+
     if (isLoading) {
         return <div className="my-5">Loading user...</div>;
     }
 
     return (
         <div className="my-5">  
+
             {interviewList.length === 0 &&
                 <div className="p-5 flex flex-col gap-3 bg-white rounded-2xl border border-gray-200 items-center mt-5">
                     <Video className="h-10 w-10 text-primary" />
-                    <h2>You Don't Have Any Interviews Created</h2>
+                    <h2 className="text-base font-medium text-gray-700">You Don't Have Any Interviews Created</h2>
                     <Button asChild>
                         <Link href="/dashboard/create-interview">+ Create New Interview</Link>
                     </Button>
                 </div>}
              
-                {interviewList&&
-                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                {interviewList && interviewList.length > 0 &&
+          
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
                         {interviewList.map((interview, index) => (
                             <InterviewCard interview={interview} key={index}/>
                         ))}

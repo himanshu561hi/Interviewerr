@@ -1,9 +1,10 @@
+"use client"
 import React from 'react';
 import { Github, Linkedin, Code, Clock, Mail } from 'lucide-react'; 
 
 const Footer = () => {
     // Defines a vibrant, modern color palette for links (Text size remains text-sm)
-    const linkClasses = "text-gray-600 text-sm hover:text-indigo-600 hover:font-medium transition duration-300 ease-in-out";
+    const linkClasses = "text-gray-600 text-sm hover:text-indigo-600 hover:font-medium transition duration-300 ease-in-out block";
     
     const SocialIcon = ({ href, children, label }) => (
         <a 
@@ -19,63 +20,59 @@ const Footer = () => {
 
     return (
 
-        <footer className="bg-gray-200 py-6 border-t border-gray-300 shadow-inner">
-            <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <footer className="bg-gray-50 py-8 border-t border-gray-200 shadow-inner"> {/* Increased vertical padding and lighter background */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> {/* Responsive horizontal padding */}
                 
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-6 border-b border-gray-300">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-gray-200"> {/* Increased gap for better spacing */}
 
 
+                    {/* 1. Developer Section (Logo and Socials) */}
                     <div className="text-center md:text-left md:col-span-1">
-                        <div className="text-3xl font-extrabold text-indigo-700 mb-1">
-
+                        <div className="text-3xl font-extrabold text-indigo-700 mb-2">
                             Interviewer
                         </div>
-                        <p className="text-sm text-gray-500 mb-3">
-
+                        <p className="text-sm text-gray-500 mb-4">
                             AI-powered interviews, smarter for recruiters and candidates.
                         </p>
                         
                         <h4 className="text-lg font-bold text-gray-800 mb-2 uppercase tracking-wider">
                             Developer
                         </h4>
-                        <p className="text-sm text-gray-600 mb-2">
+                        <p className="text-sm text-gray-600 mb-3">
                             API, technical inquiries, and collaboration.
                         </p>
                         
-                        {/* Developer Social Links */}
-                        <div className="flex justify-center md:justify-start space-x-3 mt-2">
-                            {/* Margin Reduced: mt-3 -> mt-2 */}
+                        {/* Developer Social Links: Center on mobile, left-align on desktop */}
+                        <div className="flex justify-center md:justify-start space-x-4 mt-3">
                             <SocialIcon href="https://github.com/himanshu561hi" label="GitHub Profile">
-                                <Github className="w-5 h-5" />
+                                <Github className="w-6 h-6" /> {/* Slightly larger icons */}
                             </SocialIcon>
 
                             <SocialIcon href="https://linkedin.com/in/himanshu561hi" label="LinkedIn Profile">
-                                <Linkedin className="w-5 h-5" />
+                                <Linkedin className="w-6 h-6" />
                             </SocialIcon>
                             
                             <SocialIcon href="https://himanshu561hi.netlify.app/" label="Portfolio Website">
-                                <Code className="w-5 h-5" />
+                                <Code className="w-6 h-6" />
                             </SocialIcon>
 
                             <SocialIcon href="https://wakatime.com/@himanshu561hi" label="WakaTime Coding Activity">
-                                <Clock className="w-5 h-5" />
+                                <Clock className="w-6 h-6" />
                             </SocialIcon>
                             
                             <SocialIcon href="mailto:himanshu561hi@gmail.com" label="Developer Email">
-                                <Mail className="w-5 h-5" />
+                                <Mail className="w-6 h-6" />
                             </SocialIcon>
                         </div>
                     </div>
 
                     {/* 2. Platform & Company */}
                     <div className="text-center md:text-left">
-                        <h4 className="text-lg font-bold text-gray-800 mb-2 uppercase tracking-wider">
-                            {/* Margin Reduced: mb-4 -> mb-2 */}
+                        <h4 className="text-lg font-bold text-gray-800 mb-3 uppercase tracking-wider mt-4 md:mt-0"> {/* Adjusted margin for mobile stacking */}
                             Platform & Company
                         </h4>
-                        <ul className="space-y-1">
-                             {/* Spacing Reduced: space-y-3 -> space-y-1 (Very compact) */}
+                        <ul className="space-y-2"> {/* Increased vertical spacing slightly */}
                             <li><a href="#features" className={linkClasses}>AI Features</a></li>
                             <li><a href="#pricing" className={linkClasses}>Pricing Plans</a></li>
                             <li><a href="#about" className={linkClasses}>About Us</a></li>
@@ -86,12 +83,10 @@ const Footer = () => {
                     
                     {/* 3. Support & Legal */}
                     <div className="text-center md:text-left">
-                        <h4 className="text-lg font-bold text-gray-800 mb-2 uppercase tracking-wider">
-                            {/* Margin Reduced: mb-4 -> mb-2 */}
+                        <h4 className="text-lg font-bold text-gray-800 mb-3 uppercase tracking-wider mt-4 md:mt-0"> {/* Adjusted margin for mobile stacking */}
                             Support & Legal
                         </h4>
-                        <ul className="space-y-1">
-                            {/* Spacing Reduced: space-y-3 -> space-y-1 (Very compact) */}
+                        <ul className="space-y-2"> {/* Increased vertical spacing slightly */}
                             <li><a href="#contact" className={linkClasses}>Contact Support</a></li>
                             <li><a href="#faq" className={linkClasses}>FAQ / Help Center</a></li>
                             <li><a href="#privacy" className={linkClasses}>Privacy Policy</a></li>
@@ -102,19 +97,16 @@ const Footer = () => {
 
                 </div>
 
-                {/* Footer Bottom / Copyright */}
-                <div className="pt-2 flex flex-col md:flex-row justify-center items-center text-sm text-gray-500">
-                    {/* Padding Reduced: pt-6 -> pt-2 */}
-                    <p className="order-2 md:order-1 mt-2 md:mt-0">
-                        {/* Margin Reduced: mt-4 -> mt-2 */}
+                {/* Footer Bottom / Copyright and Signature */}
+                <div className="pt-4 flex flex-col items-center text-sm text-gray-500"> {/* Centered content */}
+                    <p className="order-2 mt-3 md:mt-0 text-gray-500">
                         &copy; {new Date().getFullYear()} Interviewer. All rights reserved. 
                     </p>
-                </div>
-
-                {/* Signature on Next Line */}
-                <div className="text-center text-sm text-gray-600 mt-1">
-                    {/* Margin Reduced: mt-1 (Already tight, but kept to ensure separation) */}
-                    Made with <span className="text-red-500">❤️</span> by <b>Himanshu</b>
+                
+                    {/* Signature */}
+                    <div className="order-1 md:order-2 text-center text-sm text-gray-600">
+                        Made with <span className="text-red-500">❤️</span> by <b>Himanshu</b>
+                    </div>
                 </div>
             </div>
         </footer>

@@ -100,15 +100,15 @@ const finalResult = totalScore > 0
 
               <h2 className="font-bold mt-7 text-lg">Performance Summary</h2>
               <div className="mt-3 bg-gray-100 rounded-lg p-5">
-                {feedback?.summery ? (
-                  <p className="mt-2 text-gray-600">{feedback.summery}</p>
+                {feedback?.summary ? (
+                  <p className="mt-2 text-gray-600">{feedback?.summary}</p>
                 ) : (
-                  <p className="mt-2 text-gray-500">No summary available.</p>
+                  <p className="mt-2 text-gray-500">No summary avaable.</p>
                 )}
               </div>
               <div
                 className={`p-5 mt-5 flex items-center justify-between rounded-md ${
-                  feedback?.Recommendation == "NoT"
+                  feedback?.Recommendation == "false"
                     ? "bg-red-100"
                     : "bg-green-100"
                 }`}
@@ -116,7 +116,7 @@ const finalResult = totalScore > 0
                 <div>
                     <h2
                         className={`font-bold ${
-                        feedback?.Recommendation == "Not"
+                        feedback?.Recommendation == "false"
                             ? "text-red-700"
                             : "text-green-700"
                         }`}
@@ -125,7 +125,7 @@ const finalResult = totalScore > 0
                     </h2>
                     <p
                         className={`${
-                        feedback?.Recommendation == "Not"
+                        feedback?.Recommendation == "false"
                             ? "text-red-500"
                             : "text-green-500"
                         }`}
@@ -134,7 +134,7 @@ const finalResult = totalScore > 0
                     </p>
                 </div>
                 <Button className={`${
-                        feedback?.Recommendation == "Not"
+                        feedback?.Recommendation == "false"
                             ? "bg-red-700"
                             : "bg-green-700"
                         }`}>Send Msg</Button>

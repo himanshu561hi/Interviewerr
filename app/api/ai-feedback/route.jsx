@@ -21,6 +21,7 @@ for hire or not with msg. Give me response in JSON format
     RecommendationMsg:""
   }
 }
+and recommendation in only TRUE or FALSE on Capital letter.
 `;
 
 
