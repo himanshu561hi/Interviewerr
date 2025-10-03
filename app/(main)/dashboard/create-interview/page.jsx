@@ -73,8 +73,8 @@ export default function CreateInterview({ onFinish }) {
 
   return (
     // Main wrapper div for the entire page content
-    <div className="flex flex-col min-h-screen">
-      <div className="mt-5 px-10 md:px-24 lg:px-44 xl:px-56 flex-grow">
+    <div className="flex flex-col">
+      <div className="mt-5 p md:px-5 lg:px-10 xl:px-20 flex-grow">
         <div className="flex items-center gap-5 ">
           <ArrowLeft onClick={() => Router.back()} className="cursor-pointer" />
           <h2 className="text-2xl font-bold">Create New Interview</h2>
@@ -103,8 +103,7 @@ export default function CreateInterview({ onFinish }) {
 
         <Toaster position="bottom-right" />
       </div>
-      
-      <Footer />
+      <Footer/>
     </div>
     
   );

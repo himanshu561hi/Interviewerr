@@ -201,7 +201,7 @@ function QuestionList({ questions, loading, formData, onFinish, onCreateLink }) 
 
   return (
     // Responsive Container: m-2 (mobile) to m-5 (laptop), px-4 (mobile) to px-8 (laptop)
-    <div className="container bg-white pb-10 rounded-2xl m-2 md:m-5 px-4 md:px-8 py-1 shadow-lg">
+    <div className="container bg-white pb-10 rounded-2xl m-2 md:m-5 px-5 md:px-8 py-1 shadow-lg">
       {loading && (
         // Responsive Loading State: p-4 (mobile) to p-6 (laptop), flex-col (mobile) to flex-row (laptop)
         <div className="p-4 md:p-6 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg shadow-md border border-blue-200 flex flex-col md:flex-row items-center md:space-x-4 space-y-2 md:space-y-0 animate-pulse">
