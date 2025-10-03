@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Footer from "@/app/(main)/footer/page"; // Assuming Footer path is correct
 
 const InterviewComplete = () => {
-  const [secondsLeft, setSecondsLeft] = useState(10);
+  const [secondsLeft, setSecondsLeft] = useState(59);
   const router = useRouter();
 
   useEffect(() => {

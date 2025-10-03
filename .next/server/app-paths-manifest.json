@@ -1,7 +1,7 @@
 {
-  "/interview/[interview_Id]/start/page": "app/interview/[interview_Id]/start/page.js",
-  "/interview/[interview_Id]/completed/page": "app/interview/[interview_Id]/completed/page.js",
   "/interview/[interview_Id]/page": "app/interview/[interview_Id]/page.js",
+  "/interview/[interview_Id]/start/page": "app/interview/[interview_Id]/start/page.js",
   "/(main)/scheduled-interview/[interview_Id]/Details/page": "app/(main)/scheduled-interview/[interview_Id]/Details/page.js",
-  "/(main)/scheduled-interview/page": "app/(main)/scheduled-interview/page.js"
+  "/(main)/scheduled-interview/page": "app/(main)/scheduled-interview/page.js",
+  "/interview/[interview_Id]/completed/page": "app/interview/[interview_Id]/completed/page.js"
 }
