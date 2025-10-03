@@ -102,10 +102,7 @@ function FormContainer({ onHandleInputChange, onGenerateQuestionsClick, formData
           )}
         </Button>
       </div>
-       
-       
     </div>
-
   );
   
 }
