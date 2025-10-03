@@ -45,7 +45,7 @@ function FormContainer({ onHandleInputChange, onGenerateQuestionsClick, formData
     // Responsive container: uses less margin and padding on mobile (p-4, m-3) 
     // and standard spacing on larger screens (sm:p-5, sm:m-5).
     // It takes full width but has a max-w to center nicely on desktop.
-    <div className="p-4 sm:p-5 bg-white rounded-2xl m-3 sm:m-5 w-full max-w-2xl mx-auto shadow-lg">
+    <div className="sm:p-5 bg-white rounded-2xl m-3 sm:m-5 max-w-5xl shadow-lg">
       <h1 className="text-xl font-bold mb-6 text-gray-800">Create Interview</h1>
       
       {/* Job Position Input */}

@@ -1,5 +1,5 @@
 "use client"
-import { Calendar, List, LayoutDashboard, Settings, WalletCards, Code2Icon, User2Icon, BriefcaseBusinessIcon, Puzzle, Sparkles } from "lucide-react";
+import { Calendar, Store, List, CircleDollarSign, CircleUser, PillBottle, Baby, LayoutDashboard,BriefcaseMedical, Settings, WalletCards, Code2Icon, User2Icon, BriefcaseBusinessIcon, Puzzle, Sparkles } from "lucide-react";
 
 export const SideBarOptions = [
     {
@@ -47,7 +47,25 @@ export const InterviewType = [
     {
         title: 'Problem Solving',
         icon: Puzzle
-    },
+    },{
+        title: 'Doctor',
+        icon: BriefcaseMedical
+    },{
+        title: 'Nurse',
+        icon: Baby
+    },{
+        title: 'Pharmacist',
+        icon: PillBottle
+    },{
+        title: 'Accountant',
+        icon: CircleUser
+    },{
+        title: 'Financial',
+        icon: CircleDollarSign
+    },{
+        title: 'Marketing',
+        icon: Store
+    }
 ]
 
 
