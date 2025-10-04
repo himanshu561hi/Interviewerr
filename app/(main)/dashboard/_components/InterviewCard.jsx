@@ -58,25 +58,12 @@ async function deleteInterview() {
 
   return (
     <div className="p-4 sm:p-5 rounded-lg bg-white border flex flex-col h-full shadow-sm relative overflow-hidden">
-      
-      {/* <div className="absolute top-3 right-3 z-10"> 
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => deleteInterview(interview?.interview_Id)}
-          className="text-red-500 hover:text-red-700 hover:bg-red-50"
-        >
-          <Trash2 className="h-5 w-5" />
-        </Button>
-      </div> */}
-
-
       {isDeletable && (
         <div className="absolute top-3 right-3 z-10"> 
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => deleteInterview(interview?.interview_Id)} // Note: The deleteInterview function in the original code uses interview?.id, ensure you use the correct ID here. Assuming interview?.id is the correct ID for deletion as per your async function.
+            onClick={() => deleteInterview(interview?.interview_Id)}
             className="text-red-500 hover:text-red-700 hover:bg-red-50"
           >
             <Trash2 className="h-5 w-5" />
@@ -86,7 +73,7 @@ async function deleteInterview() {
 
       <div className="flex-grow min-w-0">
         <div className="flex items-center justify-between pr-10">
-          <div className="h-[40px] w-[40px] bg-primary rounded-full shrink-0"></div> {/* आइकन के लिए placeholder */}
+          <div className="h-[40px] w-[40px] bg-primary rounded-full shrink-0"></div> 
           <h2 className="text-xs text-gray-500 whitespace-nowrap">{formattedDate}</h2>
         </div>
         
@@ -148,3 +135,5 @@ async function deleteInterview() {
 };
 
 export default InterviewCard;
+
+

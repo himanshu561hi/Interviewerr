@@ -24,6 +24,7 @@ function ScheduledInterview() {
     // Make sure we have a user email before querying
     if (!user?.email) return;
 
+    
 
     const { data, error } = await supabase
       .from("Interview")

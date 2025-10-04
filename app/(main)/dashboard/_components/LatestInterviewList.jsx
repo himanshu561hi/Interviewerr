@@ -26,7 +26,6 @@ function LatestInterviewList({interview}) {
             .from('Interview')
             .select('*')
             .eq('email', user?.email)
-
             .order('id',{ascending: false}) 
             .limit('6');
 
@@ -60,7 +59,7 @@ function LatestInterviewList({interview}) {
              
                 {interviewList && interviewList.length > 0 &&
           
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-5">
                         {interviewList.map((interview, index) => (
                             <InterviewCard interview={interview} key={index}/>
                         ))}
