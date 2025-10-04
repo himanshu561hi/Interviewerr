@@ -2,14 +2,24 @@
 "use client"
 import React from "react";
 import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
+import { supabase } from "@/services/supabaseClient";
+
+
 
 import CandidateFeedbackDialog from "./CandidateFeedbackDialog";
 
 // The component only needs the list of candidates
+// NOTE: I am assuming 'supabase' and 'toast' are available in the scope (e.g., imported or provided by a context).
 const CandidateList = ({ candidateList }) => {
+
+
+
   return (
     // Responsive Padding: p-4 (mobile) to p-5 (desktop)
     <div className="p-4 sm:p-5">
+      
       <h2 className="font-bold my-5 text-xl sm:text-2xl">Candidates ({candidateList?.length})</h2>
 
       {candidateList?.map((candidate, index) => {
@@ -33,8 +43,9 @@ const CandidateList = ({ candidateList }) => {
           // py-3 (mobile) to py-5 (desktop)
           <div
             key={index}
-            className="p-3 sm:p-5 flex flex-col sm:flex-row gap-3 sm:gap-5 items-start sm:items-center justify-between bg-white rounded-lg mb-4 shadow-sm border"
+            className="p-3 sm:p-5 flex flex-col sm:flex-row gap-3 sm:gap-5 items-start sm:items-center justify-between bg-white rounded-lg mb-4 shadow-sm border relative" // Added 'relative' to the list item
           >
+            
             {/* User Details Section: Always stays together */}
             <div className="flex items-center gap-4">
               {/* Initial Badge */}
@@ -52,7 +63,8 @@ const CandidateList = ({ candidateList }) => {
                     : "Date N/A"}
                 </h2>
               </div>
-            </div>
+              
+            </div> 
             
             {/* Score and Action Section: Uses justify-between to spread on mobile */}
             <div className="flex w-full sm:w-auto justify-between sm:justify-start gap-5 items-center mt-3 sm:mt-0 pt-3 sm:pt-0 border-t sm:border-t-0">
@@ -66,6 +78,7 @@ const CandidateList = ({ candidateList }) => {
               
               {/* Feedback Dialog Button */}
               <CandidateFeedbackDialog candidate={candidate} />
+           
             </div>
           </div>
         );

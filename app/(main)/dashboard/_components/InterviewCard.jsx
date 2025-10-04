@@ -4,8 +4,9 @@ import React, { useState } from "react";
 import { format } from "date-fns";
 import { Copy, Send, Check, ArrowRight, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/services/supabaseClient" 
+import { supabase } from "@/services/supabaseClient";
 import Link from "next/link"; 
+import { toast } from "sonner";
 
 const InterviewCard = ({ interview, viewdetail = false }) => {
   const [isCopied, setIsCopied] = useState(false);
@@ -21,12 +22,31 @@ const InterviewCard = ({ interview, viewdetail = false }) => {
     }, 3000);
   };
 
-  const onDelete = async () => {
-    const { error } = await supabase
-      .from("Interview")
-      .delete()
-      .eq("interview_Id", interview?.interview_Id);
-  };
+async function deleteInterview() {
+  const { error } = await supabase
+    .from('Interview')
+    .delete()
+    .eq('id', interview?.id);
+
+  if (error) {
+    console.error('Error deleting data:', error);
+    toast.error('Delete Candidate List Then Try Again!');
+    return false;
+  }
+
+  console.log('Data deleted successfully!');
+  // Handle success (e.g., update the UI)
+  return true;
+}
+
+
+
+
+
+ const isDeletable = (interview["interview-feedback"]?.length || 0) === 0;
+
+
+
 
   const onSend = () => {
     window.location.href = `mailto:?subject=AI Interview Link&body=Here is your AI interview link: ${process.env.NEXT_PUBLIC_HOST_URL}/${interview?.interview_Id}`;
@@ -39,16 +59,30 @@ const InterviewCard = ({ interview, viewdetail = false }) => {
   return (
     <div className="p-4 sm:p-5 rounded-lg bg-white border flex flex-col h-full shadow-sm relative overflow-hidden">
       
-      <div className="absolute top-3 right-3 z-10"> 
+      {/* <div className="absolute top-3 right-3 z-10"> 
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => onDelete(interview?.interview_Id)}
+          onClick={() => deleteInterview(interview?.interview_Id)}
           className="text-red-500 hover:text-red-700 hover:bg-red-50"
         >
           <Trash2 className="h-5 w-5" />
         </Button>
-      </div>
+      </div> */}
+
+
+      {isDeletable && (
+        <div className="absolute top-3 right-3 z-10"> 
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => deleteInterview(interview?.interview_Id)} // Note: The deleteInterview function in the original code uses interview?.id, ensure you use the correct ID here. Assuming interview?.id is the correct ID for deletion as per your async function.
+            className="text-red-500 hover:text-red-700 hover:bg-red-50"
+          >
+            <Trash2 className="h-5 w-5" />
+          </Button>
+        </div>
+      )}
 
       <div className="flex-grow min-w-0">
         <div className="flex items-center justify-between pr-10">
