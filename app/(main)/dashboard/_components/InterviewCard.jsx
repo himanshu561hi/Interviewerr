@@ -39,14 +39,7 @@ async function deleteInterview() {
   return true;
 }
 
-
-
-
-
  const isDeletable = (interview["interview-feedback"]?.length || 0) === 0;
-
-
-
 
   const onSend = () => {
     window.location.href = `mailto:?subject=AI Interview Link&body=Here is your AI interview link: ${process.env.NEXT_PUBLIC_HOST_URL}/${interview?.interview_Id}`;
@@ -90,7 +83,6 @@ async function deleteInterview() {
         </h2>
       </div>
       
-
       <div className="flex flex-col gap-3 w-full mt-5">
         {viewdetail ? (
 
