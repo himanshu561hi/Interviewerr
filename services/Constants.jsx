@@ -47,24 +47,24 @@ export const InterviewType = [
     {
         title: 'Problem Solving',
         icon: Puzzle
-    },{
-        title: 'Doctor',
-        icon: BriefcaseMedical
-    },{
-        title: 'Nurse',
-        icon: Baby
-    },{
-        title: 'Pharmacist',
-        icon: PillBottle
-    },{
-        title: 'Accountant',
-        icon: CircleUser
-    },{
-        title: 'Financial',
-        icon: CircleDollarSign
-    },{
-        title: 'Marketing',
-        icon: Store
+    // },{
+    //     title: 'Doctor',
+    //     icon: BriefcaseMedical
+    // },{
+    //     title: 'Nurse',
+    //     icon: Baby
+    // },{
+    //     title: 'Pharmacist',
+    //     icon: PillBottle
+    // },{
+    //     title: 'Accountant',
+    //     icon: CircleUser
+    // },{
+    //     title: 'Financial',
+    //     icon: CircleDollarSign
+    // },{
+    //     title: 'Marketing',
+    //     icon: Store
     }
 ]
 
