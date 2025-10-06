@@ -136,7 +136,7 @@ function AllInterview() {
                 
                 {interviewList.length > 0 ? (
                     // Grid Layout: Excellent for responsiveness. No changes needed here.
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
                         {interviewList.map((interview) => (
                             <InterviewCard interview={interview} key={interview.id} /> 
                         ))}
