@@ -166,10 +166,13 @@ function InterviewLink({ interview_Id, formData }) {
     // Mocking a host URL since process.env might not be available
     // NOTE: Restoring the original logic using process.env, which is required
     // for production use, but mocking the variable if unavailable.
-    const hostUrl = typeof process.env.NEXT_PUBLIC_HOST_URL !== 'undefined' 
+    const hostUrl = (typeof process.env.NEXT_PUBLIC_HOST_URL !== 'undefined' && process.env.NEXT_PUBLIC_HOST_URL)
       ? process.env.NEXT_PUBLIC_HOST_URL 
-      : "https://ai-interview.app"; 
-    const interviewUrl = `${hostUrl}/${interview_Id}`;
+      : "http://localhost:3000"; 
+    
+    // Ensure hostUrl doesn't end with a slash, then add /interview/ prefix
+    const cleanHostUrl = hostUrl.replace(/\/$/, "");
+    const interviewUrl = `${cleanHostUrl}/interview/${interview_Id}`;
     return interviewUrl;
   };
 

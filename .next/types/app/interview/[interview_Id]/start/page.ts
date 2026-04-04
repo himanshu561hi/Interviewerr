@@ -1,4 +1,4 @@
-// File: /Volumes/Himanshu/Himanshu/GitHub Repos/Interviewer/app/interview/[interview_Id]/start/page.jsx
+// File: /Volumes/Himanshu/github-repos/Interviewerr/app/interview/[interview_Id]/start/page.jsx
 import * as entry from '../../../../../../app/interview/[interview_Id]/start/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

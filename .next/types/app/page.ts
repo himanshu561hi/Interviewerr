@@ -1,4 +1,4 @@
-// File: /Volumes/Himanshu/Himanshu/GitHub Repos/Interviewer/app/page.js
+// File: /Volumes/Himanshu/github-repos/Interviewerr/app/page.js
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

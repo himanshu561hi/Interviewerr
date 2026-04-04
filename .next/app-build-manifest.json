@@ -26,25 +26,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/(main)/dashboard/create-interview/page.js"
     ],
+    "/api/ai-model/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/ai-model/route.js"
+    ],
     "/(main)/scheduled-interview/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(main)/scheduled-interview/page.js"
-    ],
-    "/(main)/scheduled-interview/[interview_Id]/Details/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(main)/scheduled-interview/[interview_Id]/Details/page.js"
-    ],
-    "/(main)/all-interview/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(main)/all-interview/page.js"
-    ],
-    "/auth/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/auth/page.js"
     ],
     "/interview/layout": [
       "static/chunks/webpack.js",
@@ -61,15 +51,25 @@
       "static/chunks/main-app.js",
       "static/chunks/app/interview/[interview_Id]/start/page.js"
     ],
+    "/api/ai-feedback/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/ai-feedback/route.js"
+    ],
     "/interview/[interview_Id]/completed/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/interview/[interview_Id]/completed/page.js"
     ],
-    "/api/ai-feedback/route": [
+    "/(main)/all-interview/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/ai-feedback/route.js"
+      "static/chunks/app/(main)/all-interview/page.js"
+    ],
+    "/(main)/scheduled-interview/[interview_Id]/Details/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(main)/scheduled-interview/[interview_Id]/Details/page.js"
     ]
   }
 }

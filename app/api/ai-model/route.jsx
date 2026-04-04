@@ -61,7 +61,7 @@ Example JSON Format:
 🎯 The goal is to create a structured, relevant, and time-optimized interview plan for a "${formData.jobPosition}" role.`;
 
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-   const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
+   const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
         const result = await model.generateContent(prompt);
         const content = result.response.text();

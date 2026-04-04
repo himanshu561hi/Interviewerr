@@ -147,7 +147,9 @@ const InterviewCard = ({ interview, viewdetail = false }) => {
 
   // --- Logic Functions (Unchanged) ---
   const copyLink = () => {
-    const url = `${process.env.NEXT_PUBLIC_HOST_URL}/${interview?.interview_Id}`;
+    const hostUrl = process.env.NEXT_PUBLIC_HOST_URL || "http://localhost:3000";
+    const cleanHostUrl = hostUrl.replace(/\/$/, "");
+    const url = `${cleanHostUrl}/interview/${interview?.interview_Id}`;
     navigator.clipboard.writeText(url); 
     setIsCopied(true);
     setTimeout(() => {
@@ -174,7 +176,10 @@ const InterviewCard = ({ interview, viewdetail = false }) => {
   const isDeletable = (interview["interview-feedback"]?.length || 0) === 0;
 
   const onSend = () => {
-    window.location.href = `mailto:?subject=AI Interview Link&body=Here is your AI interview link: ${process.env.NEXT_PUBLIC_HOST_URL}/${interview?.interview_Id}`;
+    const hostUrl = process.env.NEXT_PUBLIC_HOST_URL || "http://localhost:3000";
+    const cleanHostUrl = hostUrl.replace(/\/$/, "");
+    const url = `${cleanHostUrl}/interview/${interview?.interview_Id}`;
+    window.location.href = `mailto:?subject=AI Interview Link&body=Here is your AI interview link: ${url}`;
   };
 
   const formattedDate = interview?.created_at

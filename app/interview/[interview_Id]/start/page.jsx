@@ -38,13 +38,18 @@ function StartInterview() {
   const userSpeechTimeoutRef = useRef(null);
   const conversationRef = useRef([]);
   const { interview_Id } = useParams();
+  const isInitializing = useRef(false);
+  const [vapiError, setVapiError] = useState(null);
+  const [hasAttemptedStart, setHasAttemptedStart] = useState(false);
 
   // Initialize Vapi only on client side
   useEffect(() => {
     if (typeof window === "undefined") return;
     console.log("Initializing Vapi...");
     try {
-      vapiRef.current = new Vapi(process.env.NEXT_PUBLIC_VAPI_PUBLIC_API_KEY)
+      const vapiKey = process.env.NEXT_PUBLIC_VAPI_PUBLIC_API_KEY;
+      console.log("Vapi key prefix:", vapiKey ? vapiKey.substring(0, 4) + "..." : "MISSING");
+      vapiRef.current = new Vapi(vapiKey)
       console.log("Vapi initialized successfully:", vapiRef.current);
     } catch (error) {
       console.error("Failed to initialize Vapi:", error.message);
@@ -53,6 +58,7 @@ function StartInterview() {
 
     vapiRef.current.on("call-start", () => {
       console.log("Call started event triggered");
+      isInitializing.current = false;
       setIsCallActive(true);
       startTimer();
       conversationRef.current = []; 
@@ -60,6 +66,7 @@ function StartInterview() {
 
     vapiRef.current.on("call-end", async () => {
       console.log("Call ended event triggered");
+      isInitializing.current = false;
       setIsCallActive(false);
       stopTimer();
       setInterviewInfo((prev) => ({
@@ -100,26 +107,31 @@ function StartInterview() {
 
     vapiRef.current.on("error", (error) => {
       console.error("Vapi error event:", JSON.stringify(error, null, 2));
+      isInitializing.current = false;
+      setVapiError(error.msg || error.message || "An unexpected error occurred during the interview session.");
+      
       if (error.code === "start-method-error") {
         console.error(
           "Start method failed. Possible causes: invalid assistant ID, API key, or serverMessage configuration."
         );
-        if (error.message) console.error("Error message:", error.message);
       }
     });
   }, [setInterviewInfo]);
 
   useEffect(() => {
-    if (typeof window === "undefined" || !vapiRef.current) return;
+    if (typeof window === "undefined" || !vapiRef.current || hasAttemptedStart) return;
+    
     console.log("Checking interviewInfo in useEffect:", interviewInfo);
     if (interviewInfo && !isCallActive) {
       console.log("Starting call with interviewInfo:", interviewInfo);
+      setHasAttemptedStart(true);
       startCall();
     } else if (!interviewInfo) {
       console.warn("interviewInfo is undefined, using fallback");
+      setHasAttemptedStart(true);
       startCall();
     }
-  }, [interviewInfo, isCallActive]);
+  }, [interviewInfo, isCallActive, hasAttemptedStart]);
 
   const startTimer = () => {
     if (timerIntervalRef.current) return;
@@ -203,6 +215,20 @@ function StartInterview() {
       return;
     }
 
+    if (!process.env.NEXT_PUBLIC_VAPI_PUBLIC_API_KEY) {
+      console.error("Vapi public key is missing from environment variables.");
+      setVapiError("Vapi configuration is incomplete (missing public API key).");
+      return;
+    }
+
+    if (isInitializing.current || isCallActive) {
+      console.log("Call is already initializing or active. Skipping startCall.");
+      return;
+    }
+
+    isInitializing.current = true;
+    setVapiError(null);
+
     let questionList = "";
     if (
       interviewInfo?.interviewData?.questionList &&
@@ -245,7 +271,7 @@ function StartInterview() {
       name: "AI Interviewer",
       model: {
         provider: "openai",
-        model: "gpt-4",
+        model: "gpt-3.5-turbo",
         messages: [
           {
             role: "system",
@@ -253,17 +279,10 @@ function StartInterview() {
           },
         ],
       },
-      voice: {
-        provider: "playht",
-        voiceId: "jennifer",
-      },
-      transcriber: {
-        provider: "deepgram",
-        model: "nova-2",
-        language: "en-US",
-      },
-      firstMessage: `Hi ${interviewInfo?.userName}, how are you? Ready for your interview on ${interviewInfo?.interviewData?.jobPosition}?`,
+      firstMessage: `Hi ${interviewInfo?.userName || "there"}, ready for your interview on ${interviewInfo?.interviewData?.jobPosition || "this role"}?`,
     };
+
+    console.log("Starting Vapi call with Minimalist Assistant Config:", JSON.stringify(dynamicAssistant, null, 2));
 
     navigator.mediaDevices
       .getUserMedia({ audio: true })
@@ -274,10 +293,14 @@ function StartInterview() {
           console.log("Call start attempted with dynamic assistant");
         } catch (error) {
           console.error("Error starting call:", error.message);
+          isInitializing.current = false;
+          setVapiError("Failed to start the interview call.");
         }
       })
       .catch((err) => {
         console.error("Microphone access denied or error:", err);
+        isInitializing.current = false;
+        setVapiError("Microphone access is required to start the interview.");
         alert("Please allow microphone access to start the interview.");
       });
   };
@@ -408,7 +431,13 @@ function StartInterview() {
             />
           </div>
           <h2 className="text-center text-sm text-gray-500 mt-4">
-            {isCallActive ? "Interview in progress..." : "Starting interview..."}
+            {vapiError ? (
+              <span className="text-red-500 font-semibold">{vapiError}</span>
+            ) : isCallActive ? (
+              "Interview in progress..."
+            ) : (
+              "Starting interview..."
+            )}
           </h2>
       </div>
       
