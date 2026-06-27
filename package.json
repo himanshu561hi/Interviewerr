@@ -34,6 +34,7 @@
     "open": "^10.2.0",
     "openai": "^5.23.2",
     "postcss": "^8.5.15",
+    "razorpay": "^2.9.6",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-icons": "^5.5.0",

@@ -41,6 +41,7 @@ function StartInterview() {
   const [hasAttemptedStart, setHasAttemptedStart] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState("");
   const [fatalError, setFatalError]           = useState("");
+  const hasVapiErrorRef                       = useRef(false);
 
   /* ── Timer ────────────────────────────────────────────── */
   const [time, setTime]           = useState(0);
@@ -132,6 +133,7 @@ function StartInterview() {
     vapiRef.current.on("call-start", () => {
       isInitializing.current = false;
       setIsCallActive(true);
+      hasVapiErrorRef.current = false;
       startTimer();
       conversationRef.current = [];
     });
@@ -145,6 +147,12 @@ function StartInterview() {
       setIsAiSpeaking(false);
       setIsUserSpeaking(false);
       cleanupMedia();
+      
+      if (hasVapiErrorRef.current && conversationRef.current.length === 0) {
+        // Prevent redirect if error happened immediately
+        return;
+      }
+      
       await GenerateFeedback(conversationRef.current);
     });
 
@@ -171,6 +179,7 @@ function StartInterview() {
     vapiRef.current.on("error", (err) => {
       console.error("Vapi error:", JSON.stringify(err));
       isInitializing.current = false;
+      hasVapiErrorRef.current = true;
       setVapiError(err.msg || err.message || "An unexpected error occurred.");
     });
 
@@ -396,13 +405,17 @@ Key Guidelines:
           className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold shadow-sm ${
             isCallActive
               ? "bg-green-50 text-green-700 border border-green-200"
+              : vapiError
+              ? "bg-red-50 text-red-700 border border-red-200"
               : "bg-amber-50 text-amber-700 border border-amber-200"
           }`}
         >
           <span
-            className={`w-2.5 h-2.5 rounded-full ${isCallActive ? "bg-green-500 animate-pulse" : "bg-amber-500"}`}
+            className={`w-2.5 h-2.5 rounded-full ${
+              isCallActive ? "bg-green-500 animate-pulse" : vapiError ? "bg-red-500" : "bg-amber-500"
+            }`}
           />
-          {isCallActive ? "Live" : "Connecting…"}
+          {isCallActive ? "Live" : vapiError ? "Connection Failed" : "Connecting…"}
         </div>
       </header>
 

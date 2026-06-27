@@ -9,6 +9,7 @@ export const DashboardContext = createContext(null);
 export default function DashboardProvider({ children }) {
     const [userDetails, setUserDetails] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [currentUserEmail, setCurrentUserEmail] = useState(null);
 
     const checkAndCreateUser = async (user) => {
         if (!user) {
@@ -33,30 +34,44 @@ export default function DashboardProvider({ children }) {
             return;
         }
 
+        let finalUser = null;
         if (existingUser) {
-            // If user exists, set their details
-            setUserDetails(existingUser);
+            finalUser = existingUser;
             console.log('Existing user data loaded into context:', existingUser);
         } else {
-            // If user does not exist, create a new one
             const newUser = {
-               id: user.id, // Now works since id is uuid in the table
-               name: user.user_metadata?.full_name || 'Unknown', // Fallback for missing metadata
+               id: user.id,
+               name: user.user_metadata?.full_name || 'Unknown',
                email: user.email,
                profile_image: user.user_metadata?.avatar_url || null,
-               credits: 3 // Add default credits to avoid not-null violation
+               credits: 5,       // Free credits
+               totalCredits: 5,  // For displaying X/5 or X/20+
+               plan: 'free',     // 'free' | 'basic'
             };
             const { error: insertError } = await supabase.from('Users').insert(newUser);
 
             if (insertError) {
                 console.error('Error creating new user:', insertError);
             } else {
-                setUserDetails(newUser);
+                finalUser = newUser;
                 console.log('New user created and loaded into context.');
             }
         }
+
+        // Add isAdmin flag
+        if (finalUser) {
+            const adminEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS || '';
+            const isAdmin = adminEmails.split(',').map(e => e.trim().toLowerCase()).includes(finalUser.email.toLowerCase());
+            finalUser.isAdmin = isAdmin;
+            setUserDetails(finalUser);
+        } else {
+            setUserDetails(null);
+        }
+
+        setCurrentUserEmail(user?.email || null);
         setLoading(false);
     };
+
 
     useEffect(() => {
         // Immediately check for an active session on load
@@ -77,7 +92,22 @@ export default function DashboardProvider({ children }) {
         return () => subscription.unsubscribe();
     }, []);
 
-    const value = { userDetails, loading };
+    // Refresh user details from DB (call this after credit deduction)
+    const refreshUser = async () => {
+        if (!currentUserEmail) return;
+        const { data } = await supabase
+            .from('Users')
+            .select('*')
+            .eq('email', currentUserEmail)
+            .maybeSingle();
+        if (data) {
+            const adminEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS || '';
+            data.isAdmin = adminEmails.split(',').map(e => e.trim().toLowerCase()).includes(data.email.toLowerCase());
+            setUserDetails(data);
+        }
+    };
+
+    const value = { userDetails, loading, refreshUser };
 
     return (
         <DashboardContext.Provider value={value}>

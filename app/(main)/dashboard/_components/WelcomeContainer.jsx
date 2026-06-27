@@ -2,7 +2,7 @@
 import React, { useContext } from 'react';
 import Image from 'next/image'; // Next.js Image Component
 import { useRouter } from 'next/navigation'; // Next.js App Router Hook
-import { LogOut, Menu, LayoutDashboard, Calendar, Users } from 'lucide-react'; // Added icons for menu
+import { LogOut, Menu, LayoutDashboard, Calendar, Users, Zap } from 'lucide-react'; // Added icons for menu
 import { DashboardContext } from '../../provider'; // Context Provider
 import { supabase } from '@/services/supabaseClient'; // Supabase Client
 import { Button } from '@/components/ui/button'; // Button Component
@@ -50,15 +50,30 @@ export default function WelcomeContainer() {
                 
                 {userDetails && (
                     <div className="flex items-center gap-4 flex-shrink-0">
-                        <Image 
-                            src={userDetails?.profile_image} 
-                            alt="Profile Image" 
-                            width={48} 
-                            height={48} 
+
+                        {/* Credits Badge */}
+                        <div
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border ${
+                                userDetails.credits > 0
+                                    ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                                    : 'bg-red-50 text-red-600 border-red-200'
+                            }`}
+                        >
+                            <Zap className="w-3.5 h-3.5" />
+                            {userDetails.credits > 0
+                                ? `${userDetails.credits}/${userDetails.totalCredits ?? 5} Credits`
+                                : 'No Credits Left'}
+                        </div>
+
+                        <Image
+                            src={userDetails?.profile_image}
+                            alt="Profile Image"
+                            width={48}
+                            height={48}
                             className="rounded-full object-cover w-12 h-12 border-2 border-indigo-500/50"
-                            unoptimized 
+                            unoptimized
                         />
-                        <LogOut 
+                        <LogOut
                             className="cursor-pointer h-6 w-6 text-gray-500 hover:text-red-600 transition duration-150"
                             onClick={handleLogout}
                             title="Logout"
@@ -91,7 +106,19 @@ export default function WelcomeContainer() {
                     </div>
                 </div>
 
-                <div className="flex items-center flex-shrink-0">
+                <div className="flex items-center flex-shrink-0 gap-2">
+
+                    {/* Mobile Credits Badge */}
+                    <div
+                        className={`flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold border ${
+                            userDetails.credits > 0
+                                ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                                : 'bg-red-50 text-red-600 border-red-200'
+                        }`}
+                    >
+                        <Zap className="w-3 h-3" />
+                        {userDetails.credits > 0 ? `${userDetails.credits}/${userDetails.totalCredits ?? 5}` : '0'}
+                    </div>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" size="icon" aria-label="Navigation Menu">
