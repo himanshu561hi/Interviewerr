@@ -144,3 +144,100 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* ============================================================
+   AI INTERVIEW — AVATAR & INTERVIEW SCREEN ANIMATIONS
+   ============================================================ */
+
+/* Avatar: random blink */
+@keyframes avatar-blink {
+  0%, 88%, 100% { transform: scaleY(1); }
+  92%           { transform: scaleY(0.07); }
+}
+
+/* Avatar: idle breathing (webcam simulation) */
+@keyframes avatar-breathe {
+  0%, 100% { transform: translateY(0px) scale(1.02); }
+  50%      { transform: translateY(-3px) scale(1.025); }
+}
+
+/* Avatar: speaking movement (webcam simulation) */
+@keyframes avatar-speak {
+  0%, 100% { transform: translateY(0px) scale(1.05); }
+  25%      { transform: translateY(-2px) scale(1.052); }
+  50%      { transform: translateY(1px) scale(1.048); }
+  75%      { transform: translateY(-1px) scale(1.053); }
+}
+
+/* Avatar: gentle head sway */
+@keyframes avatar-head-idle {
+  0%, 100% { transform: rotate(0deg); }
+  25%      { transform: rotate(1.2deg); }
+  75%      { transform: rotate(-1.2deg); }
+}
+
+/* Warning banner entrance */
+@keyframes warning-enter {
+  0%   { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* AI speaking pulse (green ring) */
+@keyframes speaking-pulse-green {
+  0%   { box-shadow: 0 0 0 0   rgba(99, 102, 241, 0.8); }
+  70%  { box-shadow: 0 0 0 14px rgba(99, 102, 241, 0); }
+  100% { box-shadow: 0 0 0 0   rgba(99, 102, 241, 0); }
+}
+
+/* Candidate speaking pulse (blue ring) */
+@keyframes speaking-pulse-blue {
+  0%   { box-shadow: 0 0 0 0   rgba(59, 130, 246, 0.8); }
+  70%  { box-shadow: 0 0 0 14px rgba(59, 130, 246, 0); }
+  100% { box-shadow: 0 0 0 0   rgba(59, 130, 246, 0); }
+}
+
+/* Audio bar bounce (for speaking indicators) */
+@keyframes audio-bar {
+  0%, 100% { transform: scaleY(0.4); }
+  50%      { transform: scaleY(1); }
+}
+
+/* Camera preview scan-line flicker */
+@keyframes camera-ready {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.7; }
+}
+
+/* ---- Utility classes ---- */
+.animate-avatar-breathe {
+  animation: avatar-breathe 6s ease-in-out infinite;
+}
+
+.animate-avatar-speak {
+  animation: avatar-speak 2.5s ease-in-out infinite;
+}
+
+.avatar-head-idle {
+  animation: avatar-head-idle 7s ease-in-out infinite;
+  transform-origin: center 90%;
+}
+
+.warning-enter {
+  animation: warning-enter 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.speaking-ai-ring {
+  animation: speaking-pulse-green 1.3s ease-in-out infinite;
+}
+
+.speaking-user-ring {
+  animation: speaking-pulse-blue 1.3s ease-in-out infinite;
+}
+
+.audio-bar {
+  animation: audio-bar 0.6s ease-in-out infinite alternate;
+}
+
+.camera-ready-dot {
+  animation: camera-ready 2s ease-in-out infinite;
+}

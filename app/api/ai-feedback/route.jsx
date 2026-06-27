@@ -2,35 +2,59 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 
 const FEEDBACK_PROMPT = `{{conversation}}
-Depends on this Interview Conversation between assitant and user,
-Give me feedback for user interview. Give me rating out of 10 for technical Skills, 
-Communication, Problem Solving, Experince. Also give me summery in 3 lines 
-about the interview and one line to let me know whether is recommanded 
-for hire or not with msg. Give me response in JSON format
 
+Based on this Interview Conversation between an AI assistant and a user, provide detailed feedback for the user's interview performance.
+
+Give me ratings out of 10 for:
+- Technical Skills
+- Communication
+- Problem Solving
+- Experience
+
+{{attentionSection}}
+
+Also provide:
+- A summary in exactly 3 lines about the interview performance
+- A recommendation on whether the candidate is recommended for hire (TRUE or FALSE in capital letters)
+- A one-line recommendation message
+
+Respond ONLY in valid JSON format matching this exact structure:
 {
-  feedback:{
-    rating:{
-      techicalSkills:5,
-      communication:6,
-      problemSolving:4,
-      experince:7
+  "feedback": {
+    "rating": {
+      "technicalSkills": 5,
+      "communication": 6,
+      "problemSolving": 4,
+      "experience": 7
     },
-    summery:<in 3 Line>,
-    Recommendation:"",
-    RecommendationMsg:""
+    "summary": "<3 line summary>",
+    "Recommendation": "TRUE",
+    "RecommendationMsg": "<one line message>"
   }
-}
-and recommendation in only TRUE or FALSE on Capital letter.
-`;
+}`;
 
 export async function POST(req) {
   try {
-    const { conversation } = await req.json();
-    const FINAL_PROMPT = FEEDBACK_PROMPT.replace(
-      "{{conversation}}",
-      JSON.stringify(conversation, null, 2),
-    );
+    const { conversation, attentionMetrics } = await req.json();
+
+    /* Build optional attention context block */
+    let attentionSection = "";
+    if (attentionMetrics) {
+      attentionSection = `
+Attention Monitoring Data (collected via real-time face tracking during the interview):
+- Eye Contact Score: ${attentionMetrics.eyeContactScore ?? "N/A"}/10
+- Face Visibility: ${attentionMetrics.faceVisibilityPct ?? "N/A"}%
+- Attention Score: ${attentionMetrics.attentionScore ?? "N/A"}/10
+- Total Warnings Issued: ${attentionMetrics.totalWarnings ?? 0}
+- Total Look-Away Duration: ${attentionMetrics.lookAwayDurationSec ?? 0} seconds
+- Interview Duration: ${attentionMetrics.interviewDurationMin ?? 0} minutes
+
+Please factor attention behaviour into your Communication and overall assessment where relevant.`;
+    }
+
+    const FINAL_PROMPT = FEEDBACK_PROMPT
+      .replace("{{conversation}}", JSON.stringify(conversation, null, 2))
+      .replace("{{attentionSection}}", attentionSection);
 
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
     if (!GEMINI_API_KEY) {
@@ -47,7 +71,7 @@ export async function POST(req) {
     console.error("Error in AI Feedback route:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

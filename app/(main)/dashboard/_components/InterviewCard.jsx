@@ -148,7 +148,7 @@ const InterviewCard = ({ interview, viewdetail = false }) => {
   // --- Logic Functions (Unchanged) ---
   const copyLink = () => {
     const hostUrl = process.env.NEXT_PUBLIC_HOST_URL || "http://localhost:3000";
-    const cleanHostUrl = hostUrl.replace(/\/$/, "");
+    const cleanHostUrl = hostUrl.replace(/\/$/, "").replace(/\/interview\/?$/, "");
     const url = `${cleanHostUrl}/interview/${interview?.interview_Id}`;
     navigator.clipboard.writeText(url); 
     setIsCopied(true);
@@ -177,7 +177,7 @@ const InterviewCard = ({ interview, viewdetail = false }) => {
 
   const onSend = () => {
     const hostUrl = process.env.NEXT_PUBLIC_HOST_URL || "http://localhost:3000";
-    const cleanHostUrl = hostUrl.replace(/\/$/, "");
+    const cleanHostUrl = hostUrl.replace(/\/$/, "").replace(/\/interview\/?$/, "");
     const url = `${cleanHostUrl}/interview/${interview?.interview_Id}`;
     window.location.href = `mailto:?subject=AI Interview Link&body=Here is your AI interview link: ${url}`;
   };

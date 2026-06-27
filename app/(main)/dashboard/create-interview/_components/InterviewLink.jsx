@@ -17,18 +17,19 @@ import React, { useState } from "react";
 
 function InterviewLink({ interview_Id, formData }) {
   const [copied, setCopied] = useState(false);
-  
+
   // Removed process.env access due to environment limitations in this context
   const GetInterviewUrl = () => {
     // Mocking a host URL since process.env might not be available
     // NOTE: Restoring the original logic using process.env, which is required
     // for production use, but mocking the variable if unavailable.
     const hostUrl = (typeof process.env.NEXT_PUBLIC_HOST_URL !== 'undefined' && process.env.NEXT_PUBLIC_HOST_URL)
-      ? process.env.NEXT_PUBLIC_HOST_URL 
-      : "http://localhost:3000"; 
-    
-    // Ensure hostUrl doesn't end with a slash, then add /interview/ prefix
-    const cleanHostUrl = hostUrl.replace(/\/$/, "");
+      ? process.env.NEXT_PUBLIC_HOST_URL
+      : "http://localhost:3000";
+
+    // Strip trailing slash, then also strip any accidental /interview suffix
+    // so the URL doesn't become /interview/interview/<id>
+    const cleanHostUrl = hostUrl.replace(/\/$/, "").replace(/\/interview\/?$/, "");
     const interviewUrl = `${cleanHostUrl}/interview/${interview_Id}`;
     return interviewUrl;
   };
@@ -43,7 +44,7 @@ function InterviewLink({ interview_Id, formData }) {
       tempInput.select();
       document.execCommand('copy');
       document.body.removeChild(tempInput);
-      
+
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -59,14 +60,14 @@ function InterviewLink({ interview_Id, formData }) {
       {/* Mock Image Placeholder */}
       {/* Replaced Image component with a simple div/icon since external paths might fail */}
       <div className="w-[50px] h-[50px] bg-green-100 rounded-full flex items-center justify-center">
-         <List className="w-6 h-6 text-green-600" />
+        <List className="w-6 h-6 text-green-600" />
       </div>
 
       <h2 className="font-bold mt-4 text-xl text-gray-800 text-center">Your AI Interview Is Ready!</h2>
       <p className="mt-2 text-sm text-gray-600 text-center">
         Share this link with your candidate to start the interview process.
       </p>
-      
+
       {/* Interview Link Box */}
       <div className="w-full p-5 sm:p-7 mt-6 rounded-xl bg-white shadow-lg border border-gray-100">
         <div className="flex justify-between items-start flex-col sm:flex-row sm:items-center mb-3">
@@ -75,22 +76,22 @@ function InterviewLink({ interview_Id, formData }) {
             Valid for 30 Days
           </h2>
         </div>
-        
+
         {/* Input and Copy Button Group */}
         <div className="flex flex-col sm:flex-row gap-3">
-          <Input 
+          <Input
             className="flex-grow min-w-0" // Ensure input takes space
-            defaultValue={GetInterviewUrl()} 
-            disabled={true} 
+            defaultValue={GetInterviewUrl()}
+            disabled={true}
           />
           <Button onClick={handleCopy} className="whitespace-nowrap flex items-center justify-center">
             <Copy className="mr-2 h-4 w-4" />
             {copied ? "Copied!" : "Copy Link"}
           </Button>
         </div>
-        
+
         <hr className="my-5 border-t border-gray-200" />
-        
+
         {/* Interview Details */}
         <div className="flex flex-wrap gap-x-6 gap-y-2">
           <h2 className="text-sm text-gray-600 flex gap-2 items-center">
@@ -103,7 +104,7 @@ function InterviewLink({ interview_Id, formData }) {
           </h2>
         </div>
       </div>
-      
+
       {/* Share Via Section */}
       <div className="mt-5 bg-white p-5 rounded-xl shadow-lg border border-gray-100 w-full">
         <h2 className="font-bold mb-4 text-gray-800">Share Via</h2>
@@ -122,7 +123,7 @@ function InterviewLink({ interview_Id, formData }) {
           </Button>
         </div>
       </div>
-      
+
       {/* Navigation Buttons (Back/New) */}
       <div className="mt-8 mb-5 flex flex-col-reverse sm:flex-row justify-between w-full gap-3">
         {/* Replaced Link with standard <a> tag wrapped around Button */}
