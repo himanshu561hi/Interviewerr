@@ -24,25 +24,30 @@ for hire or not with msg. Give me response in JSON format
 and recommendation in only TRUE or FALSE on Capital letter.
 `;
 
-
 export async function POST(req) {
-    try {
-        const { conversation } = await req.json();
-        const FINAL_PROMPT = FEEDBACK_PROMPT.replace("{{conversation}}", JSON.stringify(conversation, null, 2));
+  try {
+    const { conversation } = await req.json();
+    const FINAL_PROMPT = FEEDBACK_PROMPT.replace(
+      "{{conversation}}",
+      JSON.stringify(conversation, null, 2),
+    );
 
-        const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-        if (!GEMINI_API_KEY) {
-            throw new Error("GEMINI_API_KEY not set");
-        }
-
-        const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-        const result = await model.generateContent(FINAL_PROMPT);
-        const content = result.response.text();
-
-        return NextResponse.json({ content });
-    } catch (error) {
-        console.error("Error in AI Feedback route:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+    if (!GEMINI_API_KEY) {
+      throw new Error("GEMINI_API_KEY not set");
     }
+
+    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
+    const result = await model.generateContent(FINAL_PROMPT);
+    const content = result.response.text();
+
+    return NextResponse.json({ content });
+  } catch (error) {
+    console.error("Error in AI Feedback route:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
 }
